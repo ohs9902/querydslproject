@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://${DB-URL}/newsfeed
+    url: jdbc:mysql://${DB-URL}/outsourcing
     username: ${DB-USER}
     password: ${DB-PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
