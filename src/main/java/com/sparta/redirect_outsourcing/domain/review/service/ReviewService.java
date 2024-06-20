@@ -4,30 +4,30 @@ import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
+import com.sparta.redirect_outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.redirect_outsourcing.domain.review.entity.Review;
 import com.sparta.redirect_outsourcing.domain.review.repository.ReviewAdapter;
-import com.sparta.redirect_outsourcing.domain.review.repository.ReviewRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
+
     private final ReviewAdapter reviewAdapter;
-    private final ReviewRepository repository;
-    public ReviewService(ReviewAdapter reviewAdapter, ReviewRepository repository) {
-        this.reviewAdapter = reviewAdapter;
-        this.repository = repository;
+
+    @Transactional
+    public ReviewResponseDto createReview(ReviewRequestDto requestDto){
+        Review review = new Review(requestDto.getRating(), requestDto.getComment());
+        Review savedReview = reviewAdapter.save(review);
+        log.info(savedReview.getComment());
+        return ReviewResponseDto.of(savedReview);
     }
 
-    public ResponseEntity<MessageResponseDto> createReview(ReviewRequestDto requestDto){
-        Long rating = requestDto.getRating();
-        if(rating<1 || rating>5){
-            return ResponseUtils.of(ResponseCodeEnum.REVIEW_OVER_RATING);
-        }
-        String comment = requestDto.getComment();
-        Review review = new Review(rating,comment);
-        repository.save(review);
-        return ResponseUtils.of(HttpStatus.OK,"리뷰 등록 성공");
-    }
+
 }
