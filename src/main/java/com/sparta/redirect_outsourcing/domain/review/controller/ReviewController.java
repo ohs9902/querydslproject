@@ -1,5 +1,6 @@
 package com.sparta.redirect_outsourcing.domain.review.controller;
 
+import com.sparta.redirect_outsourcing.common.DataResponseDto;
 import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -54,9 +57,10 @@ public class ReviewController {
         return ResponseUtils.of(HttpStatus.OK,"리뷰삭제 성공");
     }
 
-    @GetMapping("/restaurants/{restaurantId}/reviews")
-    public ResponseEntity<MessageResponseDto> getReviewList(){
-        return null;
+    @GetMapping("/restaurants/reviews")
+    public ResponseEntity<DataResponseDto<List<ReviewResponseDto>>>getReviewList(){
+        List<ReviewResponseDto> reviews = reviewService.getReviews();
+        return ResponseUtils.of(HttpStatus.OK,"리뷰 조회 성공",reviews);
     }
 
 

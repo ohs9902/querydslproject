@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,5 +26,10 @@ public class ReviewAdapter {
     public Review findById(Long id){
         return reviewRepository.findById(id)
                 .orElseThrow(()-> new ReviewException(ResponseCodeEnum.REVIEW_NOT_FOUND));
+    }
+
+    public List<Review> findAll(){
+        List<Review> reviews = reviewRepository.findAll();
+        return reviews;
     }
 }

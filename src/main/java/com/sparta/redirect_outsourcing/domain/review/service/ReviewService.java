@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,5 +41,15 @@ public class ReviewService {
         reviewAdapter.delete(review);
     }
 
+    //싣당 부분 완성후 수정할 예정
+    @Transactional
+    public List<ReviewResponseDto> getReviews(){
+        List<Review> reviews = reviewAdapter.findAll();
+        List<ReviewResponseDto> responseReviews = new ArrayList<>();
+        for (Review review : reviews) {
+            responseReviews.add(ReviewResponseDto.of(review));
+        }
+        return responseReviews;
+    }
 
 }
