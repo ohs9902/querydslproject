@@ -38,12 +38,17 @@ public class ReviewController {
     }
      */
 
-    @PutMapping("/restaurants/{restaurantId}/reviews/{reviewId}")
-    public ResponseEntity<MessageResponseDto> updateReview(){
-        return null;
+    @PutMapping("/restaurants/reviews/{reviewId}")
+    public ResponseEntity<MessageResponseDto> updateReview(
+            @RequestBody ReviewRequestDto requestDto , @PathVariable Long reviewId){
+        if(requestDto.getRating()<1 || requestDto.getRating()>5){
+            return ResponseUtils.of(ResponseCodeEnum.REVIEW_OVER_RATING);
+        }
+        ReviewResponseDto responseDto = reviewService.updateReview(requestDto,reviewId);
+        return ResponseUtils.of(HttpStatus.OK,"리뷰 수정 성공");
     }
 
-    @DeleteMapping("/restaurants/{restaurantId}/reviews/{reviewId}")
+    @DeleteMapping("/restaurants/reviews/{reviewId}")
     public ResponseEntity<MessageResponseDto> deleteReview(){
         return null;
     }

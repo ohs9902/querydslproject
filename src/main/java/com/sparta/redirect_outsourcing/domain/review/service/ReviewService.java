@@ -1,16 +1,11 @@
 package com.sparta.redirect_outsourcing.domain.review.service;
 
-import com.sparta.redirect_outsourcing.common.MessageResponseDto;
-import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
-import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.redirect_outsourcing.domain.review.entity.Review;
 import com.sparta.redirect_outsourcing.domain.review.repository.ReviewAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +22,15 @@ public class ReviewService {
         Review savedReview = reviewAdapter.save(review);
         log.info(savedReview.getComment());
         return ReviewResponseDto.of(savedReview);
+    }
+
+    @Transactional
+    public ReviewResponseDto updateReview(ReviewRequestDto requestDto , Long reviewId){
+        Review review = reviewAdapter.findById(reviewId);
+        review.update(requestDto);
+        Review updateReview = reviewAdapter.save(review);
+        log.info(updateReview.toString());
+        return ReviewResponseDto.of(updateReview);
     }
 
 
