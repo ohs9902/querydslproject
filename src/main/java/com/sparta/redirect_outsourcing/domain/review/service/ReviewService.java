@@ -29,8 +29,13 @@ public class ReviewService {
         Review review = reviewAdapter.findById(reviewId);
         review.update(requestDto);
         Review updateReview = reviewAdapter.save(review);
-        log.info(updateReview.toString());
         return ReviewResponseDto.of(updateReview);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId){
+        Review review = reviewAdapter.findById(reviewId);
+        reviewAdapter.delete(review);
     }
 
 

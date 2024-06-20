@@ -16,6 +16,9 @@ public class ReviewAdapter {
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
+    public void delete(Review review){
+        reviewRepository.delete(review);
+    }
 
     public Review findById(Long id){
         return reviewRepository.findById(id)

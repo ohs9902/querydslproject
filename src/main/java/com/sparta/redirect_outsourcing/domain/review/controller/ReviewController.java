@@ -49,8 +49,9 @@ public class ReviewController {
     }
 
     @DeleteMapping("/restaurants/reviews/{reviewId}")
-    public ResponseEntity<MessageResponseDto> deleteReview(){
-        return null;
+    public ResponseEntity<MessageResponseDto> deleteReview(@PathVariable Long reviewId){
+        reviewService.deleteReview(reviewId);
+        return ResponseUtils.of(HttpStatus.OK,"리뷰삭제 성공");
     }
 
     @GetMapping("/restaurants/{restaurantId}/reviews")
