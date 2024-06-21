@@ -118,7 +118,13 @@ public class UserService {
     public void logout(User user) {
         user.setRefreshToken(null);  // 리프레시 토큰을 무효화
         userAdapter.save(user);
-
     }
 
+    // 회원 탈퇴
+    @Transactional
+    public void deleteUser(User user) {
+        user.setUserStatus(UserStatusEnum.STATUS_DELETED);
+        user.setRefreshToken(null);
+        userAdapter.save(user);
+    }
 }

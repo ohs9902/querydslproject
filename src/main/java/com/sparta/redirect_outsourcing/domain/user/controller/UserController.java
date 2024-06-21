@@ -10,6 +10,7 @@ import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
 
-    // 회원가
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<MessageResponseDto> signup(@Validated @RequestBody SignupRequestDto requestDto) {
         userService.signup(requestDto);
@@ -69,5 +70,14 @@ public class UserController {
         userService.logout(userDetails.getUser());
         SecurityContextHolder.clearContext();
         return ResponseUtils.of(HttpStatus.OK, "로그아웃 성공");
+    }
+
+    // 회원 탈퇴
+    @PutMapping("/withdraw")
+    public ResponseEntity<MessageResponseDto> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        userService.deleteUser(user);
+        SecurityContextHolder.clearContext();
+        return ResponseUtils.of(HttpStatus.OK, "회원 탈퇴 성공");
     }
 }
