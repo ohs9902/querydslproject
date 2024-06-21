@@ -10,7 +10,7 @@ import lombok.Setter;
 public class CartItemRequestDto {
     private Long id;
     private Long cartId;
-    private Long menuId;
+//    private Long menuId;
     private Long quantity;
     private Long quantityPrice;
 

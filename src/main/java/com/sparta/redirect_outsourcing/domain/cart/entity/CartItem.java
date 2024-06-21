@@ -33,9 +33,9 @@ public class CartItem extends TimeStampEntity {
     @JoinColumn(name = "menus_id", nullable = false)
     private Menu menu;
 
-    public CartItem(Cart cart, Menu menu, Long quantity, Long quantityPrice) {
+    public CartItem(Cart cart /*Menu menu*/, Long quantity, Long quantityPrice) {
         this.cart = cart;
-        this.menu = menu;
+//        this.menu = menu;
         this.quantity = quantity;
         this.quantityPrice = quantityPrice;
     }
