@@ -1,6 +1,7 @@
 package com.sparta.redirect_outsourcing.domain.user.controller;
 
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
+import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.user.dto.ExamRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.ExamResponseDto;
@@ -22,10 +23,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<DataResponseDto<ExamResponseDto>> test(
+    public ResponseEntity<MessageResponseDto> test(
             @RequestBody ExamRequestDto requestDto
     ) {
         ExamResponseDto examResponseDto = userService.testFindById(requestDto);
-        return ResponseUtils.of(HttpStatus.OK, "성공", examResponseDto);
+        return ResponseUtils.of(HttpStatus.OK, "성공");
     }
 }
