@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -52,6 +54,10 @@ public class User extends TimeStampEntity {
 
     @Column
     private String kakaoId;
+
+    @ElementCollection
+    @Column
+    private List<String> previousPasswords = new ArrayList<>();
     /*
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;

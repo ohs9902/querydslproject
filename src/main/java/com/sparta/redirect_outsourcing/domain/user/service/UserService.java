@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.user.service;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
+import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserRoleEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserStatusEnum;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Slf4j
@@ -46,6 +48,37 @@ public class UserService {
             role = UserRoleEnum.ROLE_ADMIN;
         }
         user.setUserRole(role);
+        userAdapter.save(user);
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void updatePassword(Long userId, UpdatePasswordRequestDto requestDto) {
+        User user = userAdapter.findById(userId);
+
+        // 현재 비밀번호 확인
+        if (!passwordEncoder.matches(requestDto.getCurrentPassword(), user.getPassword())) {
+            throw new UserException(ResponseCodeEnum.INVALID_CURRENT_PASSWORD);
+        }
+
+        // 새로운 비밀번호가 현재 비밀번호 및 최근 사용한 세 개의 비밀번호와 다른지 확인
+        if (passwordEncoder.matches(requestDto.getNewPassword(), user.getPassword()) ||
+                user.getPreviousPasswords().stream().anyMatch(pw -> passwordEncoder.matches(requestDto.getNewPassword(), pw))) {
+            throw new UserException(ResponseCodeEnum.SAME_AS_OLD_PASSWORD);
+        }
+
+        // 비밀번호 업데이트
+        String encodedNewPassword = passwordEncoder.encode(requestDto.getNewPassword());
+        user.setPassword(encodedNewPassword);
+
+        // 이전 비밀번호 업데이트 (최대 3개 유지)
+        List<String> previousPasswords = user.getPreviousPasswords();
+        if (previousPasswords.size() >= 3) {
+            previousPasswords.remove(0);
+        }
+        previousPasswords.add(user.getPassword());
+        user.setPreviousPasswords(previousPasswords);
+
         userAdapter.save(user);
     }
 }
