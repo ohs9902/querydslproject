@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.review.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
+import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -33,4 +34,15 @@ public class Review extends TimeStampEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
+
+    public Review(Float rating, String comment) {
+        this.rating = rating;
+        this.comment = comment;
+        this.likeCount = 0;
+    }
+
+    public void update(ReviewRequestDto requestDto){
+        this.rating = requestDto.getRating();
+        this.comment = requestDto.getComment();
+    }
 }
