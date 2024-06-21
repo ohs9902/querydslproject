@@ -1,6 +1,5 @@
 package com.sparta.redirect_outsourcing.auth;
 
-
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
@@ -52,15 +51,26 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
         String accessToken = jwtProvider.getAccessTokenFromHeader(req);
+
         // GET 요청에 대해서는 인증을 요구하지 않음
         if (req.getMethod().equals(HttpMethod.GET.name()) && uri.startsWith("/users/")) {
             filterChain.doFilter(req, res);
             return;
         }
-        // 토큰 존재여부 확인
-        if (StringUtils.hasText(accessToken)) {
-            boolean accessTokenValid = jwtProvider.validateToken(accessToken);
 
+        if (StringUtils.hasText(accessToken)) {
+            // 액세스 토큰에서 클레임(사용자 정보)을 추출
+            Claims accessTokenClaims = jwtProvider.getUserInfoFromToken(accessToken);
+            String username = accessTokenClaims.getSubject();
+            User user = userAdapter.findByUsername(username);
+
+            // 유저의 리프레쉬 토큰이 null인 경우
+            if (user == null || user.getRefreshToken() == null) {
+                handleInvalidTokens();
+                return;
+            }
+
+            boolean accessTokenValid = jwtProvider.validateToken(accessToken);
             if (accessTokenValid) {
                 log.info("handleValidAccessToken");
                 handleValidAccessToken(req, res, filterChain, accessToken); // 엑세스 토큰의 유효성을 검증합니다.
@@ -111,7 +121,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             handleExpiredRefreshToken();
         }
     }
-
 
     // Refresh Token 만료 처리
     private void handleExpiredRefreshToken() {

@@ -85,6 +85,7 @@ public class UserService {
         }
         previousPasswords.add(user.getPassword());
         user.setPreviousPasswords(previousPasswords);
+        userAdapter.save(user);
 
     }
 
@@ -103,7 +104,7 @@ public class UserService {
                 throw new UserException(ResponseCodeEnum.UPLOAD_FAILED);
             }
         }
-
+        userAdapter.save(user);
     }
 
     // 프로필 조회
@@ -111,4 +112,13 @@ public class UserService {
         User user = userAdapter.findById(userId);
         return new ProfileResponseDto(user.getNickname(), user.getIntroduce(), user.getPictureUrl());
     }
+
+    // 로그아웃
+    @Transactional
+    public void logout(User user) {
+        user.setRefreshToken(null);  // 리프레시 토큰을 무효화
+        userAdapter.save(user);
+
+    }
+
 }

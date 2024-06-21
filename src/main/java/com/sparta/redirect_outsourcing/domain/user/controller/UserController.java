@@ -62,4 +62,12 @@ public class UserController {
         ProfileResponseDto profile = userService.getProfile(userId);
         return ResponseUtils.of(HttpStatus.OK, "프로필 조회 성공", profile);
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<MessageResponseDto> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(userDetails.getUser());
+        SecurityContextHolder.clearContext();
+        return ResponseUtils.of(HttpStatus.OK, "로그아웃 성공");
+    }
 }
