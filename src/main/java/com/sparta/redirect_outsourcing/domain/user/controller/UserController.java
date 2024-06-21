@@ -5,14 +5,19 @@ import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
+import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
+import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @Slf4j
 @RestController
@@ -33,5 +38,15 @@ public class UserController {
 
         userService.updatePassword(userId, requestDto);
         return ResponseUtils.of(HttpStatus.OK, "비밀번호 변경 성공");
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<MessageResponseDto> updateProfile(
+            @Validated @RequestPart("updateProfileRequestDto") UpdateProfileRequestDto requestDto,
+            @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        userService.updateProfile(user, requestDto, profilePicture);
+        return ResponseUtils.of(HttpStatus.OK, "프로필 수정 성공");
     }
 }

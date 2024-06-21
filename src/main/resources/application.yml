@@ -31,5 +31,14 @@ logging.level:
 #  org.springframework.web: debug
 
 jwt-secret-key: ${JWT-SECRET-KEY}
-
 admin-password: ${ADMIN-PASSWORD}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS-ACCESS-KEY}
+      secret-key: ${AWS-SECRET-KEY}
+    region:
+      static: us-east-2
+    s3:
+      bucket: sparta-storage

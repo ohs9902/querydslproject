@@ -1,8 +1,10 @@
 package com.sparta.redirect_outsourcing.domain.user.service;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
+import com.sparta.redirect_outsourcing.common.S3Uploader;
 import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
+import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserRoleEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserStatusEnum;
@@ -15,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -28,6 +32,8 @@ public class UserService {
 
     @Value("${admin-password}")
     private String adminPassword;
+    private final S3Uploader s3Uploader;
+
 
     // 회원가입
     @Transactional
@@ -78,6 +84,25 @@ public class UserService {
         }
         previousPasswords.add(user.getPassword());
         user.setPreviousPasswords(previousPasswords);
+
+        userAdapter.save(user);
+    }
+
+    // 프로필 수정
+    // 프로필 수정
+    @Transactional
+    public void updateProfile(User user, UpdateProfileRequestDto requestDto, MultipartFile profilePicture) {
+        user.setNickname(requestDto.getNickname());
+        user.setIntroduce(requestDto.getIntroduce());
+
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            try {
+                String pictureUrl = s3Uploader.upload(profilePicture, "profile-pictures");
+                user.setPictureUrl(pictureUrl);
+            } catch (IOException e) {
+                throw new UserException(ResponseCodeEnum.UPLOAD_FAILED);
+            }
+        }
 
         userAdapter.save(user);
     }

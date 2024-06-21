@@ -15,6 +15,7 @@ public enum ResponseCodeEnum {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, "현재 비밀번호가 유효하지 않습니다."),
     SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "새 비밀번호는 이전 비밀번호와 다르게 설정해야 합니다."),
+    UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 사진 업로드 중 오류가 발생했습니다."),
     // 주문
 
     // 리뷰
