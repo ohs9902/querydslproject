@@ -2,15 +2,10 @@ package com.sparta.redirect_outsourcing.domain.cart.service;
 
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemRequestDto;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemResponseDto;
-import com.sparta.redirect_outsourcing.domain.cart.dto.CartRequestDto;
-import com.sparta.redirect_outsourcing.domain.cart.dto.CartResponseDto;
 import com.sparta.redirect_outsourcing.domain.cart.entity.Cart;
 import com.sparta.redirect_outsourcing.domain.cart.entity.CartItem;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartItemRepository;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartRepository;
-import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
-import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
-import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +27,7 @@ public class CartService {
 
     public CartItemResponseDto addItemToCart(CartItemRequestDto requestDto) {
        Cart cart = cartRepository.findById(requestDto.getCartId())
+           //카트가 널이면 새로 만들어서 추가하고, 널이 아닐경우 add하기
            .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
 
 //       Menu menu = menuRepository.findById(requestDto.getMenuId())
@@ -43,10 +39,12 @@ public class CartService {
        return toDto(cartItem);
     }
 
+
     public List<CartItemResponseDto> getCartItems() {
         List<CartItem> cartItems = cartItemRepository.findAll();
         return cartItems.stream().map(this::toDto).collect(Collectors.toList());
     }
+
 
     public CartItemResponseDto updateCartItem(CartItemRequestDto requestDto) {
         CartItem cartItem = cartItemRepository.findById(requestDto.getId())
@@ -64,8 +62,9 @@ public class CartService {
         return toDto(cartItem);
     }
 
+
     public void deleteCartItems(List<Long> menuIds) {
-        cartItemRepository.deleteAllByMenuId(menuIds);
+        cartItemRepository.deleteAllByMenuIdIn(menuIds);
     }
 
     private  CartItemResponseDto toDto(CartItem cartItem) {
