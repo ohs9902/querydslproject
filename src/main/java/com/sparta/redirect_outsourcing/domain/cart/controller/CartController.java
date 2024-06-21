@@ -52,7 +52,7 @@ public class CartController {
     }
 
     // 장바구니 삭제
-    @DeleteMapping("/carts?menu={menuId},{menuId},{menuId}")
+    @DeleteMapping("/carts")
     public ResponseEntity<DataResponseDto<Void>> deleteCartItems(
         @RequestParam List<Long> menuIds
     ) {
