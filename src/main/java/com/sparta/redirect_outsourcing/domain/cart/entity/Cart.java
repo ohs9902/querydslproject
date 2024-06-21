@@ -26,4 +26,8 @@ public class Cart extends TimeStampEntity {
     private List<CartItem> cartItems;
 
     // 카트 : 카트아이템 = 1:N 카트->카트아이템 단방향 관계 (cart_id)
+
+    public Cart(Long id) {
+        this.id = id;
+    }
 }
