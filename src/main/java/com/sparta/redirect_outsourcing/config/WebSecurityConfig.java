@@ -1,23 +1,8 @@
 package com.sparta.redirect_outsourcing.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.redirect_outsourcing.auth.JwtAuthenticationFilter;
-import com.sparta.redirect_outsourcing.auth.JwtAuthorizationFilter;
-import com.sparta.redirect_outsourcing.auth.JwtProvider;
-import com.sparta.redirect_outsourcing.auth.UserDetailsServiceImpl;
-import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
