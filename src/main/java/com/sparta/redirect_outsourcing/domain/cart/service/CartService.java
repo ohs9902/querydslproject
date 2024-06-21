@@ -27,8 +27,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     /*
-    private final RestaurantRepository restaurantRepository;
-    private final MenuRepository menuRepository;
+\    private final MenuRepository menuRepository;
     */
 
     public CartItemResponseDto addItemToCart(CartItemRequestDto requestDto) {
@@ -44,7 +43,7 @@ public class CartService {
        return toDto(cartItem);
     }
 
-    public List<CartItemResponseDto> getartItems() {
+    public List<CartItemResponseDto> getCartItems() {
         List<CartItem> cartItems = cartItemRepository.findAll();
         return cartItems.stream().map(this::toDto).collect(Collectors.toList());
     }
