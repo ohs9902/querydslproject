@@ -22,33 +22,16 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/restaurants/reviews")
-    public ResponseEntity<MessageResponseDto> createReview(@RequestBody ReviewRequestDto requestDto){
-        if(requestDto.getRating()<1 || requestDto.getRating()>5){
-            return ResponseUtils.of(ResponseCodeEnum.REVIEW_OVER_RATING);
-        }
-
+    public ResponseEntity<DataResponseDto<ReviewResponseDto>> createReview(@RequestBody ReviewRequestDto requestDto){
         ReviewResponseDto responseDto = reviewService.createReview(requestDto);
-
-        return ResponseUtils.of(HttpStatus.OK, "리뷰 작성 성공");
+        return ResponseUtils.of(HttpStatus.OK, "리뷰 작성 성공",responseDto);
     }
-    /*
-    @PostMapping
-    public ResponseEntity<MessageResponseDto> test(
-            @RequestBody ExamRequestDto requestDto
-    ) {
-        ExamResponseDto examResponseDto = userService.testFindById(requestDto);
-        return ResponseUtils.of(HttpStatus.OK, "리뷰 작성 성공");
-    }
-     */
 
     @PutMapping("/restaurants/reviews/{reviewId}")
-    public ResponseEntity<MessageResponseDto> updateReview(
+    public ResponseEntity<DataResponseDto<ReviewResponseDto>> updateReview(
             @RequestBody ReviewRequestDto requestDto , @PathVariable Long reviewId){
-        if(requestDto.getRating()<1 || requestDto.getRating()>5){
-            return ResponseUtils.of(ResponseCodeEnum.REVIEW_OVER_RATING);
-        }
         ReviewResponseDto responseDto = reviewService.updateReview(requestDto,reviewId);
-        return ResponseUtils.of(HttpStatus.OK,"리뷰 수정 성공");
+        return ResponseUtils.of(HttpStatus.OK,"리뷰 수정 성공",responseDto);
     }
 
     @DeleteMapping("/restaurants/reviews/{reviewId}")

@@ -1,9 +1,12 @@
 package com.sparta.redirect_outsourcing.domain.review.service;
 
+import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
+import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.redirect_outsourcing.domain.review.entity.Review;
 import com.sparta.redirect_outsourcing.domain.review.repository.ReviewAdapter;
+import com.sparta.redirect_outsourcing.exception.custom.review.ReviewOverRatingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,14 +24,19 @@ public class ReviewService {
 
     @Transactional
     public ReviewResponseDto createReview(ReviewRequestDto requestDto){
+        if(requestDto.getRating()<1 || requestDto.getRating()>5){
+            throw new ReviewOverRatingException(ResponseCodeEnum.REVIEW_OVER_RATING);
+        }
         Review review = new Review(requestDto.getRating(), requestDto.getComment());
         Review savedReview = reviewAdapter.save(review);
-        log.info(savedReview.getComment());
         return ReviewResponseDto.of(savedReview);
     }
 
     @Transactional
     public ReviewResponseDto updateReview(ReviewRequestDto requestDto , Long reviewId){
+        if(requestDto.getRating()<1 || requestDto.getRating()>5){
+            throw new ReviewOverRatingException(ResponseCodeEnum.REVIEW_OVER_RATING);
+        }
         Review review = reviewAdapter.findById(reviewId);
         review.update(requestDto);
         Review updateReview = reviewAdapter.save(review);
