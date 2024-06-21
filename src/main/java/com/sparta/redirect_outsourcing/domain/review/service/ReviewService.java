@@ -39,8 +39,7 @@ public class ReviewService {
         }
         Review review = reviewAdapter.findById(reviewId);
         review.update(requestDto);
-        Review updateReview = reviewAdapter.save(review);
-        return ReviewResponseDto.of(updateReview);
+        return ReviewResponseDto.of(review);
     }
 
     @Transactional
@@ -50,7 +49,7 @@ public class ReviewService {
     }
 
     //싣당 부분 완성후 수정할 예정
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviews(){
         List<Review> reviews = reviewAdapter.findAll();
         List<ReviewResponseDto> responseReviews = new ArrayList<>();
