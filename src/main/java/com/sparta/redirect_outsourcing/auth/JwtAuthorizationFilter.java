@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -51,7 +52,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
         String accessToken = jwtProvider.getAccessTokenFromHeader(req);
-
+        // GET 요청에 대해서는 인증을 요구하지 않음
+        if (req.getMethod().equals(HttpMethod.GET.name()) && uri.startsWith("/users/")) {
+            filterChain.doFilter(req, res);
+            return;
+        }
         // 토큰 존재여부 확인
         if (StringUtils.hasText(accessToken)) {
             boolean accessTokenValid = jwtProvider.validateToken(accessToken);

@@ -1,8 +1,10 @@
 package com.sparta.redirect_outsourcing.domain.user.controller;
 
 import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
+import com.sparta.redirect_outsourcing.common.DataResponseDto;
 import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
+import com.sparta.redirect_outsourcing.domain.user.dto.ProfileResponseDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
@@ -26,11 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
 
+    // 회원가
     @PostMapping("/signup")
     public ResponseEntity<MessageResponseDto> signup(@Validated @RequestBody SignupRequestDto requestDto) {
         userService.signup(requestDto);
         return ResponseUtils.of(HttpStatus.CREATED, "회원가입 성공");
     }
+
+    // 비밀번호 변경
     @PutMapping("/password")
     public ResponseEntity<MessageResponseDto> updatePassword(@Validated @RequestBody UpdatePasswordRequestDto requestDto) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -40,6 +45,7 @@ public class UserController {
         return ResponseUtils.of(HttpStatus.OK, "비밀번호 변경 성공");
     }
 
+    // 프로필 업로드
     @PutMapping("/profile")
     public ResponseEntity<MessageResponseDto> updateProfile(
             @Validated @RequestPart("updateProfileRequestDto") UpdateProfileRequestDto requestDto,
@@ -48,5 +54,12 @@ public class UserController {
         User user = userDetails.getUser();
         userService.updateProfile(user, requestDto, profilePicture);
         return ResponseUtils.of(HttpStatus.OK, "프로필 수정 성공");
+    }
+
+    // 프로필 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<DataResponseDto<ProfileResponseDto>> getProfile(@PathVariable Long userId) {
+        ProfileResponseDto profile = userService.getProfile(userId);
+        return ResponseUtils.of(HttpStatus.OK, "프로필 조회 성공", profile);
     }
 }

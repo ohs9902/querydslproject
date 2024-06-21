@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.user.service;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.S3Uploader;
+import com.sparta.redirect_outsourcing.domain.user.dto.ProfileResponseDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
@@ -85,10 +86,9 @@ public class UserService {
         previousPasswords.add(user.getPassword());
         user.setPreviousPasswords(previousPasswords);
 
-        userAdapter.save(user);
     }
 
-    // 프로필 수정
+
     // 프로필 수정
     @Transactional
     public void updateProfile(User user, UpdateProfileRequestDto requestDto, MultipartFile profilePicture) {
@@ -104,6 +104,11 @@ public class UserService {
             }
         }
 
-        userAdapter.save(user);
+    }
+
+    // 프로필 조회
+    public ProfileResponseDto getProfile(Long userId) {
+        User user = userAdapter.findById(userId);
+        return new ProfileResponseDto(user.getNickname(), user.getIntroduce(), user.getPictureUrl());
     }
 }
