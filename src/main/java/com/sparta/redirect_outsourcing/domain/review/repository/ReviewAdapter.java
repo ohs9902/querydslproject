@@ -19,6 +19,7 @@ public class ReviewAdapter {
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
+
     public void delete(Review review){
         reviewRepository.delete(review);
     }
@@ -29,7 +30,6 @@ public class ReviewAdapter {
     }
 
     public List<Review> findAll(){
-        List<Review> reviews = reviewRepository.findAll();
-        return reviews;
+        return reviewRepository.findAll();
     }
 }

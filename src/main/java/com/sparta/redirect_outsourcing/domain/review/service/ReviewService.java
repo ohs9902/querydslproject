@@ -39,8 +39,7 @@ public class ReviewService {
         }
         Review review = reviewAdapter.findById(reviewId);
         review.update(requestDto);
-        Review updateReview = reviewAdapter.save(review);
-        return ReviewResponseDto.of(updateReview);
+        return ReviewResponseDto.of(review);
     }
 
     @Transactional
