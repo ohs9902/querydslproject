@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.menu.controller;
 
 import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
+import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.redirect_outsourcing.domain.menu.dto.MenuResponseDto;
@@ -11,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -22,8 +21,29 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping("/menus")
-    public ResponseEntity<DataResponseDto<MenuResponseDto>> createMenu(@RequestBody MenuRequestDto requestDto){
-        MenuResponseDto responseDto= menuService.createMenu(requestDto);
+    public ResponseEntity<DataResponseDto<MenuResponseDto>> createMenu(
+            @RequestBody MenuRequestDto requestDto ,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        MenuResponseDto responseDto= menuService.createMenu(requestDto,userDetails);
         return ResponseUtils.of(HttpStatus.OK,"메뉴 등록 성공",responseDto);
+    }
+
+    @PutMapping("/menus/{menuId}")
+    public ResponseEntity<DataResponseDto<MenuResponseDto>> updateMenu(
+            @PathVariable Long menuId ,
+            @RequestBody MenuRequestDto requestDto ,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+            ){
+        MenuResponseDto responseDto = menuService.updateMenu(menuId,requestDto,userDetails);
+        return ResponseUtils.of(HttpStatus.OK,"메뉴 수정 성공",responseDto);
+    }
+
+    @DeleteMapping("/menus/{menuId}")
+    public ResponseEntity<MessageResponseDto> deleteMenu(
+            @PathVariable Long menuId ,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        menuService.deleteMenu(menuId,userDetails);
+
+        return ResponseUtils.of(HttpStatus.OK,"메뉴 삭제 ");
     }
 }

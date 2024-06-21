@@ -19,4 +19,8 @@ public class MenuAdapter {
     public Menu findById(Long id){
         return menuRepository.findById(id).orElseThrow(()-> new MenuException(ResponseCodeEnum.MENU_NOT_FOUND));
     }
+
+    public void delete(Menu menu){
+        menuRepository.delete(menu);
+    }
 }

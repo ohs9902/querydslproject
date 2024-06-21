@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.menu.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
+import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,10 +29,11 @@ public class Menu extends TimeStampEntity {
     @JoinColumn(name = "users_id")
     private User user;
 
-    public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum){
+    public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum ,User user){
         this.name = name;
         this.price = price;
         this.menuCategoryEnum = menuCategoryEnum;
+        this.user = user;
     }
 
     public void update(String name , int price , MenuCategoryEnum menuCategoryEnum){

@@ -21,7 +21,8 @@ public enum ResponseCodeEnum {
 
     //메뉴
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND,"메뉴를 찾을 수 없습니다."),
-    MENU_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"카테고리를 찾을 수 없습니다.")
+    MENU_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"카테고리를 찾을 수 없습니다."),
+    MENU_USER_NOT_MATCH(HttpStatus.FORBIDDEN,"다른 유저가 생성한 메뉴는 수정 삭제 할 수 없습니다.")
     ;
     private final HttpStatus httpStatus;
     private final String message;
