@@ -31,3 +31,5 @@ logging.level:
 #  org.springframework.web: debug
 
 jwt-secret-key: ${JWT-SECRET-KEY}
+
+admin-password: ${ADMIN-PASSWORD}

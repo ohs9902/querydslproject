@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name="users")
 public class User extends TimeStampEntity {
 
     @Id
