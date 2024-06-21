@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.rmi.server.LogStream.log;
 
@@ -67,6 +69,20 @@ public class MenuService {
         Menu menu = menuAdapter.findById(menuId);
         return MenuResponseDto.of(menu);
     }
+
+    //식당 기능 병합후 수정 예정
+    @Transactional(readOnly = true)
+    public List<MenuResponseDto> getAllMenu(){
+        List<Menu> menus = menuAdapter.findAll();
+        List<MenuResponseDto> responseDtos = new ArrayList<>();
+        for (Menu menu : menus) {
+            responseDtos.add(MenuResponseDto.of(menu));
+        }
+
+        return responseDtos;
+    }
+
+
     //카테고리 검증
     public MenuCategoryEnum findCategory(String category){
         MenuCategoryEnum menuCategoryEnum = null;

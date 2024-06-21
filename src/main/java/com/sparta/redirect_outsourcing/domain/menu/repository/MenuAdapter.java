@@ -6,6 +6,9 @@ import com.sparta.redirect_outsourcing.exception.custom.menu.MenuException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -19,7 +22,9 @@ public class MenuAdapter {
     public Menu findById(Long id){
         return menuRepository.findById(id).orElseThrow(()-> new MenuException(ResponseCodeEnum.MENU_NOT_FOUND));
     }
-
+    public List<Menu> findAll(){
+        return menuRepository.findAll();
+    }
     public void delete(Menu menu){
         menuRepository.delete(menu);
     }
