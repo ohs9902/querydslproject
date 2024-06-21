@@ -14,4 +14,6 @@ public class CartItemResponseDto {
     private Long quantity;
     private Long quantityPrice;
 
+    public CartItemResponseDto(Long id, Long id1, Long id2, Long quantity, Long quantityPrice) {
+    }
 }
