@@ -1,7 +1,6 @@
 package com.sparta.redirect_outsourcing.domain.cart.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
-import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemRequestDto;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,7 +39,7 @@ public class CartItem extends TimeStampEntity {
         this.quantityPrice = quantityPrice;
     }
 
-    public void update(Cart cart, Menu menu, Long quantity, Long quantityPrice) {
+    public void update(Cart cart, Long quantity, Long quantityPrice) {
         this.cart = cart;
         this.menu = menu;
         this.quantity = quantity;
