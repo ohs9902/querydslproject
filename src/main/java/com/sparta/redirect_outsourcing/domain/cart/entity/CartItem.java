@@ -19,9 +19,6 @@ public class CartItem extends TimeStampEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long menuId;
-
-    @Column(nullable = false)
     private Long quantity;
 
     @Column(nullable = false)
