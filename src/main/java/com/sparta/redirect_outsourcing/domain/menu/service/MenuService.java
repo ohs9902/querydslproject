@@ -62,6 +62,11 @@ public class MenuService {
         menuAdapter.delete(menu);
     }
 
+    @Transactional(readOnly = true)
+    public MenuResponseDto getSingleMenu(Long menuId){
+        Menu menu = menuAdapter.findById(menuId);
+        return MenuResponseDto.of(menu);
+    }
     //카테고리 검증
     public MenuCategoryEnum findCategory(String category){
         MenuCategoryEnum menuCategoryEnum = null;
@@ -74,5 +79,6 @@ public class MenuService {
         }
         return menuCategoryEnum;
     }
+
 
 }

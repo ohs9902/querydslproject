@@ -44,6 +44,12 @@ public class MenuController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         menuService.deleteMenu(menuId,userDetails);
 
-        return ResponseUtils.of(HttpStatus.OK,"메뉴 삭제 ");
+        return ResponseUtils.of(HttpStatus.OK,"메뉴 삭제 성공 ");
+    }
+
+    @GetMapping("menus/{menuId}")
+    public ResponseEntity<DataResponseDto<MenuResponseDto>> getSingleMenu(@PathVariable Long menuId){
+        MenuResponseDto responseDto = menuService.getSingleMenu(menuId);
+        return ResponseUtils.of(HttpStatus.OK,"메뉴 단일 조회 성공" , responseDto );
     }
 }
