@@ -20,10 +20,14 @@ public class Cart extends TimeStampEntity {
     private Long id;
 
     @Column
-    private Long userId;
+    private Long usersId;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems;
 
     // 카트 : 카트아이템 = 1:N 카트->카트아이템 단방향 관계 (cart_id)
+
+    public Cart(Long id) {
+        this.id = id;
+    }
 }

@@ -24,7 +24,17 @@ public class Menu extends TimeStampEntity {
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "users_id")
+    private User user;
+
     public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum){
+        this.name = name;
+        this.price = price;
+        this.menuCategoryEnum = menuCategoryEnum;
+    }
+
+    public void update(String name , int price , MenuCategoryEnum menuCategoryEnum){
         this.name = name;
         this.price = price;
         this.menuCategoryEnum = menuCategoryEnum;
