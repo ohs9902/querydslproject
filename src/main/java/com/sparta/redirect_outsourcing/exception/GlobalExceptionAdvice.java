@@ -32,4 +32,5 @@ public class GlobalExceptionAdvice {
         log.error("유효성 검사 실패:\n\n{}", String.join(",\n", errorMessageList));
         return ResponseUtils.of(HttpStatus.BAD_REQUEST, "유효성 검사 실패", errorMessageList);
     }
+
 }

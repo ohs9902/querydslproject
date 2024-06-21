@@ -23,4 +23,10 @@ public class Menu extends TimeStampEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
+
+    public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum){
+        this.name = name;
+        this.price = price;
+        this.menuCategoryEnum = menuCategoryEnum;
+    }
 }
