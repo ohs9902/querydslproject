@@ -17,4 +17,12 @@ public class UserAdapter {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserException(ResponseCodeEnum.USER_NOT_FOUND));
     }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException(ResponseCodeEnum.USER_NOT_FOUND));
+    }
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }
