@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ResponseCodeEnum {
     // 유저
-    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "로그인 실패"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
     USER_DELETED(HttpStatus.UNAUTHORIZED, "탈퇴한 사용자입니다"),
     INVALID_TOKENS(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),

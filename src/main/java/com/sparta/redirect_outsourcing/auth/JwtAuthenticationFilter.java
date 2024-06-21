@@ -82,7 +82,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         userAdapter.save(user);  // Refresh Token은 유저 필드에 저장
 
         response.setStatus(HttpServletResponse.SC_OK);
-        request.setAttribute("loginSuccess", true); // 로그인 성공 플래그 설정
 
         // 로그인 성공 응답 본문 설정
         ResponseEntity<MessageResponseDto> responseEntity = ResponseUtils.of(HttpStatus.OK, "로그인 성공");
@@ -93,11 +92,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.info("JwtAuthenticationFilter: 인증 실패");
-        request.setAttribute("loginSuccess", false); // 로그인 실패 플래그 설정
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         // 로그인 실패 응답 본문 설정
-        ResponseEntity<MessageResponseDto> responseEntity = ResponseUtils.of(ResponseCodeEnum.LOGIN_FAILED);
+        ResponseEntity<MessageResponseDto> responseEntity = ResponseUtils.of(HttpStatus.BAD_REQUEST, "로그인실패" );
         writeResponseBody(response, responseEntity);
     }
 
