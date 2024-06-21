@@ -1,30 +1,22 @@
-package com.sparta.redirect_outsourcing.domain.review.entity;
+package com.sparta.redirect_outsourcing.domain.follow.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@Table(name = "reviews")
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
-public class Review extends TimeStampEntity {
+@Table(name = "follows")
+public class Follow extends TimeStampEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Min(1)
-    @Max(5)
-    @Column(nullable = false)
-    private Float rating;
-    @Column(nullable = false)
-    private String comment;
-    @Column(nullable = false)
-    private int likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
