@@ -92,16 +92,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.info("JwtAuthenticationFilter: 인증 실패");
+        request.setAttribute("loginSuccess", false); // 로그인 실패 플래그 설정
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         // 로그인 실패 응답 본문 설정
-        ResponseEntity<MessageResponseDto> responseEntity = ResponseUtils.of(HttpStatus.BAD_REQUEST, "로그인실패" );
-        writeResponseBody(response, responseEntity);
+        writeResponseBody(response, ResponseUtils.of(HttpStatus.BAD_REQUEST, "로그인 실패"));
     }
 
     // 응답을 헤더뿐아니라 바디에도 추가로 보내주기위한 메서드
     private void writeResponseBody(HttpServletResponse response, ResponseEntity<MessageResponseDto> responseEntity) throws IOException {
-        response.setStatus(responseEntity.getStatusCodeValue());
+        response.setStatus(responseEntity.getStatusCode().value());
         response.setContentType("application/json");
         try (ServletOutputStream outputStream = response.getOutputStream()) {
             objectMapper.writeValue(outputStream, responseEntity.getBody());
