@@ -8,6 +8,8 @@ import com.sparta.redirect_outsourcing.exception.custom.order.OrdersNotFoundExce
 import com.sparta.redirect_outsourcing.exception.custom.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,27 +32,35 @@ public class OrderAdapter {
         return orderRepository.saveAll(orders);
     }
 
-    public List<Order> findByUserId(Long userId) {
-        List<Order> orders = orderRepository.findByUserIdOrderByOrderGroupDesc(userId);
-        if (orders.isEmpty()) {
-            throw new UserNotFoundException(ResponseCodeEnum.USER_NOT_FOUND);
-        }
-        return orders;
+    public Order save(Order order) {
+        return orderRepository.save(order);
     }
 
-    public List<Order> findByOrderGroup(Long orderGroup) {
-        List<Order> orders = orderRepository.findByOrderGroup(orderGroup);
-        if (orders.isEmpty()) {
-            throw new OrdersNotFoundException(ResponseCodeEnum.ORDER_NOT_FOUND);
-        }
-        return orders;
+//    public List<Order> findByUserId(Long userId) {
+//        List<Order> orders = orderRepository.findByUserIdOrderByOrderGroupDesc(userId);
+//        if (orders.isEmpty()) {
+//            throw new UserNotFoundException(ResponseCodeEnum.USER_NOT_FOUND);
+//        }
+//        return orders;
+//    }
+
+    public Page<Order> findAllByUserId(Long userId, Pageable pageable) {
+        return orderRepository.findAllByUserId(userId, pageable);
     }
+
+//    public List<Order> findByOrderGroup(Long orderGroup) {
+//        List<Order> orders = orderRepository.findByOrderGroup(orderGroup);
+//        if (orders.isEmpty()) {
+//            throw new OrdersNotFoundException(ResponseCodeEnum.ORDER_NOT_FOUND);
+//        }
+//        return orders;
+//    }
 
     public void deleteCart(Long userId) {
 //        cartRepository.deleteByUserId(userId);
     }
 
-    public void deleteByOrderGroup(Long orderGroup) {
-        orderRepository.deleteByOrderGroup(orderGroup);
-    }
+//    public void deleteByOrderGroup(Long orderGroup) {
+//        orderRepository.deleteByOrderGroup(orderGroup);
+//    }
 }

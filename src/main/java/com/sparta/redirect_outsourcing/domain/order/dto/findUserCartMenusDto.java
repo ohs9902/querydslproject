@@ -5,4 +5,5 @@ public interface findUserCartMenusDto {
     int getPrice();
     int getQuantity();
     String getRestaurantName();
+    Long getCartsId();
 }
