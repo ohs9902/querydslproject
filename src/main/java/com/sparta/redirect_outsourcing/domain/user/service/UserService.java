@@ -10,7 +10,9 @@ import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserRoleEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserStatusEnum;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
-import com.sparta.redirect_outsourcing.exception.custom.user.UserException;
+import com.sparta.redirect_outsourcing.exception.custom.user.InvalidAdminException;
+import com.sparta.redirect_outsourcing.exception.custom.user.PasswordException;
+import com.sparta.redirect_outsourcing.exception.custom.user.ProfileImageUploadException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +52,7 @@ public class UserService {
         UserRoleEnum role = UserRoleEnum.ROLE_USER;
         if (requestDto.isAdmin()) {
             if (!adminPassword.equals(requestDto.getAdminPassword())) {
-                throw new UserException(ResponseCodeEnum.INVALID_ADMIN_TOKEN);
+                throw new InvalidAdminException(ResponseCodeEnum.INVALID_ADMIN_TOKEN);
             }
             role = UserRoleEnum.ROLE_ADMIN;
         }
@@ -65,13 +67,13 @@ public class UserService {
 
         // 현재 비밀번호 확인
         if (!passwordEncoder.matches(requestDto.getCurrentPassword(), user.getPassword())) {
-            throw new UserException(ResponseCodeEnum.INVALID_CURRENT_PASSWORD);
+            throw new PasswordException(ResponseCodeEnum.INVALID_CURRENT_PASSWORD);
         }
 
         // 새로운 비밀번호가 현재 비밀번호 및 최근 사용한 세 개의 비밀번호와 다른지 확인
         if (passwordEncoder.matches(requestDto.getNewPassword(), user.getPassword()) ||
                 user.getPreviousPasswords().stream().anyMatch(pw -> passwordEncoder.matches(requestDto.getNewPassword(), pw))) {
-            throw new UserException(ResponseCodeEnum.SAME_AS_OLD_PASSWORD);
+            throw new PasswordException(ResponseCodeEnum.SAME_AS_OLD_PASSWORD);
         }
 
         // 비밀번호 업데이트
@@ -101,7 +103,7 @@ public class UserService {
                 String pictureUrl = s3Uploader.upload(profilePicture, "profile-pictures");
                 user.setPictureUrl(pictureUrl);
             } catch (IOException e) {
-                throw new UserException(ResponseCodeEnum.UPLOAD_FAILED);
+                throw new ProfileImageUploadException(ResponseCodeEnum.UPLOAD_FAILED);
             }
         }
         userAdapter.save(user);
