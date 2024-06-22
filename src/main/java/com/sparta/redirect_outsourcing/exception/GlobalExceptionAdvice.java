@@ -24,7 +24,6 @@ public class GlobalExceptionAdvice {
         return ResponseUtils.of(e.getResponseCodeEnum());
     }
 
-    // Validation 에러
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<DataResponseDto<List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         List<String> errorMessageList = new ArrayList<>();
