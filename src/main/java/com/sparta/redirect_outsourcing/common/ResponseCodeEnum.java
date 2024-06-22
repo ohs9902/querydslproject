@@ -12,7 +12,10 @@ public enum ResponseCodeEnum {
     USER_DELETED(HttpStatus.UNAUTHORIZED, "탈퇴한 사용자입니다"),
     INVALID_TOKENS(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     INVALID_ADMIN_TOKEN(HttpStatus.FORBIDDEN, "관리자 암호가 틀려 등록이 불가능합니다."),
-    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다.");
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
+    INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, "현재 비밀번호가 유효하지 않습니다."),
+    SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "새 비밀번호는 이전 비밀번호와 다르게 설정해야 합니다."),
+    UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 사진 업로드 중 오류가 발생했습니다."),
     // 주문
 
     // 리뷰
@@ -20,7 +23,7 @@ public enum ResponseCodeEnum {
     REVIEW_OVER_RATING(HttpStatus.BAD_REQUEST,"평점은 1에서5 사이 만 가능합니다.")
 
 
-
+    ;
     private final HttpStatus httpStatus;
     private final String message;
 }
