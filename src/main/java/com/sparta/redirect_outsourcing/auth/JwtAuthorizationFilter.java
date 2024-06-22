@@ -3,6 +3,7 @@ package com.sparta.redirect_outsourcing.auth;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
+import com.sparta.redirect_outsourcing.exception.custom.user.TokensException;
 import com.sparta.redirect_outsourcing.exception.custom.user.UserException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -125,13 +126,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // Refresh Token 만료 처리
     private void handleExpiredRefreshToken() {
         log.error("Expired Refresh Token");
-        throw new UserException(ResponseCodeEnum.REFRESH_TOKEN_EXPIRED);
+        throw new TokensException(ResponseCodeEnum.REFRESH_TOKEN_EXPIRED);
     }
 
     // 유효하지 않은 토큰 처리
     private void handleInvalidTokens() {
         log.error("Invalid Tokens");
-        throw new UserException(ResponseCodeEnum.INVALID_TOKENS);
+        throw new TokensException(ResponseCodeEnum.INVALID_TOKENS);
     }
 
     //  인증 객체를 생성하여 SecurityContext에 설정하기 위한 메서드
