@@ -10,7 +10,6 @@ import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,7 @@ public class UserController {
 
     // 비밀번호 변경
     @PutMapping("/password")
-    public ResponseEntity<MessageResponseDto> updatePassword(@Validated @RequestBody UpdatePasswordRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> updatePassword(@AuthenticationPrincipal @Validated @RequestBody UpdatePasswordRequestDto requestDto) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = userDetails.getUser().getId();
 
