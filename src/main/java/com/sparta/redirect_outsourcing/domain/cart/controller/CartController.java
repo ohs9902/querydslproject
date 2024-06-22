@@ -5,11 +5,13 @@ import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemRequestDto;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemResponseDto;
 import com.sparta.redirect_outsourcing.domain.cart.service.CartService;
+import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +53,7 @@ public class CartController {
         return ResponseUtils.of(HttpStatus.OK, "Cart item updated successfully", responseDto);
     }
 
-     장바구니 삭제 - 메뉴 만들어지면 사용 가능
+     // 장바구니 삭제 - 메뉴 만들어지면 사용 가능
     @DeleteMapping("/carts")
     public ResponseEntity<DataResponseDto<Void>> deleteCartItems(
         @RequestParam List<Long> menuIds

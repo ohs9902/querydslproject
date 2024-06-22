@@ -7,6 +7,7 @@ import com.sparta.redirect_outsourcing.domain.cart.entity.CartItem;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartAdapter;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartItemAdapter;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
+import com.sparta.redirect_outsourcing.exception.custom.user.UserException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +20,21 @@ public class CartService {
     private final CartAdapter cartAdapter;
     private final CartItemAdapter cartItemAdapter;
     private final UserAdapter userAdapter;
-    private final MenuAdapter menuAdapter;
+//    private final MenuAdapter menuAdapter;
 
     public CartItemResponseDto addItemToCart(CartItemRequestDto requestDto) {
-        Cart cart = cartAdapter.findById(requestDto.getCartId())
-            .orElseGet(() -> cartAdapter.save(new Cart(requestDto.getCartId(), requestDto.getUsersId())));
+        Cart cart;
+        try {
+            cart = cartAdapter.findById(requestDto.getCartId());
+        } catch (UserException e) {
+            cart = new Cart(requestDto.getCartId(), requestDto.getUserId());
+            cartAdapter.save(cart);
+        }
 
-        Menu menu = menuAdapter.findById(requestDto.getMenusId())
-            .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+//        Menu menu = menuAdapter.findById(requestDto.getMenusId())
+//            .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
-        CartItem cartItem = new CartItem(cart, menu, requestDto.getQuantity(),
+        CartItem cartItem = new CartItem(cart /*menu*/, requestDto.getQuantity(),
             requestDto.getQuantityPrice());
         cartItem = cartItemAdapter.save(cartItem);
 
@@ -45,10 +51,10 @@ public class CartService {
 
         Cart cart = cartAdapter.findById(requestDto.getCartId());
 
-        Menu menu = menuAdapter.findById(requestDto.getMenusId())
-            .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+//        Menu menu = menuAdapter.findById(requestDto.getMenusId())
+//            .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
-        cartItem.update(cart, menu, requestDto.getQuantity(), requestDto.getQuantityPrice());
+        cartItem.update(cart/*menu*/, requestDto.getQuantity(), requestDto.getQuantityPrice());
         cartItem = cartItemAdapter.save(cartItem);
 
         return toDto(cartItem);
