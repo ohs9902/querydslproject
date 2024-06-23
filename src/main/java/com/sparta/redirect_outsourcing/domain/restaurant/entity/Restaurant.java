@@ -1,11 +1,14 @@
 package com.sparta.redirect_outsourcing.domain.restaurant.entity;
 
+import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantUpdateRequestDto;
 import com.sparta.redirect_outsourcing.domain.review.entity.Review;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
+import com.sparta.redirect_outsourcing.exception.custom.restaurant.NotExistRestaurantCategoryException;
+import com.sparta.redirect_outsourcing.exception.custom.restaurant.NotYourRestaurantException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +25,14 @@ public class Restaurant extends TimeStampEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "restaurant_id",cascade = CascadeType.ALL,orphanRemoval = true)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "users_id")
+    private User user;
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "restaurant_id",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Menu> menus = new ArrayList<>();
 
     @Column(nullable = false)
@@ -40,14 +47,17 @@ public class Restaurant extends TimeStampEntity {
 
     private String description;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private User user;
+
 
     public Restaurant(RestaurantCreateRequestDto createReq) {
         this.name = createReq.getName();
         this.address = createReq.getAddress();
-        this.category = createReq.getCategory();
+        String categoryName= RestaurntCategoryEnum.checkCategory(createReq.getCategory());
+        //예외처리 카테고리 양식에 맞지 않을 경우
+        if(categoryName!=null)
+            this.category = RestaurntCategoryEnum.valueOf(categoryName);
+        else
+            throw new NotExistRestaurantCategoryException(ResponseCodeEnum.NOT_EXIST_CATEGORY);
         this.description = createReq.getDescription();
     }
 
@@ -57,5 +67,10 @@ public class Restaurant extends TimeStampEntity {
         this.address = updateReq.getAddress();
         this.category = updateReq.getCategory();
         this.description = updateReq.getDescription();
+    }
+
+    public void verify(User user) {
+        if(!user.equals(this.user))
+            throw new NotYourRestaurantException(ResponseCodeEnum.NOT_YOUR_RESTAURANT,user);
     }
 }
