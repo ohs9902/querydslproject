@@ -62,8 +62,8 @@ public class UserService {
 
     // 비밀번호 변경
     @Transactional
-    public void updatePassword(Long userId, UpdatePasswordRequestDto requestDto) {
-        User user = userAdapter.findById(userId);
+    public void updatePassword(User loginUser, UpdatePasswordRequestDto requestDto) {
+        User user = userAdapter.findById(loginUser.getId());
 
         // 현재 비밀번호 확인
         if (!passwordEncoder.matches(requestDto.getCurrentPassword(), user.getPassword())) {
@@ -87,14 +87,12 @@ public class UserService {
         }
         previousPasswords.add(user.getPassword());
         user.setPreviousPasswords(previousPasswords);
-        userAdapter.save(user);
-
     }
 
 
     // 프로필 수정
     @Transactional
-    public void updateProfile(User user, UpdateProfileRequestDto requestDto, MultipartFile profilePicture) {
+    public ProfileResponseDto updateProfile(User user, UpdateProfileRequestDto requestDto, MultipartFile profilePicture) {
         user.setNickname(requestDto.getNickname());
         user.setIntroduce(requestDto.getIntroduce());
 
@@ -106,7 +104,8 @@ public class UserService {
                 throw new ProfileImageUploadException(ResponseCodeEnum.UPLOAD_FAILED);
             }
         }
-        userAdapter.save(user);
+        User updatedUser = userAdapter.save(user);
+        return new ProfileResponseDto(updatedUser.getNickname(), updatedUser.getIntroduce(), updatedUser.getPictureUrl());
     }
 
     // 프로필 조회
