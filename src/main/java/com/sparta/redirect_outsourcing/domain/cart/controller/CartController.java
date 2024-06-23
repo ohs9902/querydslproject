@@ -1,5 +1,6 @@
 package com.sparta.redirect_outsourcing.domain.cart.controller;
 
+import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemRequestDto;
@@ -31,34 +32,39 @@ public class CartController {
     // 장바구니에 물건 추가
     @PostMapping("/carts")
     public ResponseEntity<DataResponseDto<CartItemResponseDto>> addItemToCart(
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
             @RequestBody CartItemRequestDto requestDto
     ) {
-        CartItemResponseDto responseDto = cartService.addItemToCart(requestDto);
+        CartItemResponseDto responseDto = cartService.addItemToCart(loginUser.getUser(), requestDto);
         return ResponseUtils.of(HttpStatus.OK, "장바구니 추가", responseDto);
     }
 
     // 장바구니 조회
     @GetMapping("/carts")
-    public ResponseEntity<DataResponseDto<List<CartItemResponseDto>>> getCartItem() {
-        List<CartItemResponseDto> cartItems = cartService.getCartItems();
+    public ResponseEntity<DataResponseDto<List<CartItemResponseDto>>> getCartItem(
+            @AuthenticationPrincipal UserDetailsImpl loginUser
+    ) {
+        List<CartItemResponseDto> cartItems = cartService.getCartItems(loginUser.getUser());
         return ResponseUtils.of(HttpStatus.OK, "Cart items viewed successfully", cartItems);
     }
 
     // 장바구니 수정
     @PutMapping("/carts")
     public ResponseEntity<DataResponseDto<CartItemResponseDto>> updateCartItem(
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
             @RequestBody CartItemRequestDto requestDto
     ) {
-        CartItemResponseDto responseDto = cartService.updateCartItem(requestDto);
+        CartItemResponseDto responseDto = cartService.updateCartItem(loginUser.getUser(), requestDto);
         return ResponseUtils.of(HttpStatus.OK, "Cart item updated successfully", responseDto);
     }
 
      // 장바구니 삭제 - 메뉴 만들어지면 사용 가능
     @DeleteMapping("/carts")
     public ResponseEntity<DataResponseDto<Void>> deleteCartItems(
-        @RequestParam List<Long> menuIds
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
+            @RequestParam List<Long> menuIds
     ) {
-        cartService.deleteCartItems(menuIds);
+        cartService.deleteCartItems(loginUser.getUser(), menuIds);
         return ResponseUtils.of(HttpStatus.OK, "Cart items deleted successfully", null);
     }
 

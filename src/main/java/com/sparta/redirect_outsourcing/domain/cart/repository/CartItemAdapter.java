@@ -20,7 +20,7 @@ public class CartItemAdapter {
             .orElseThrow(() -> new UserException(ResponseCodeEnum.CART_ITEM_NOT_FOUND));
     }
 
-    public List<CartItem> findAll() {
+    public List<CartItem> findAllByCartId() {
         return cartItemRepository.findAll();
     }
 
@@ -34,5 +34,18 @@ public class CartItemAdapter {
 
     public void deleteById(Long cartsId) {
         cartItemRepository.deleteById(cartsId);
+    }
+
+    public List<CartItem> findAllByCartId(Long cartId) {
+        return cartItemRepository.findAllByCartId(cartId);
+    }
+
+    public CartItem findByCartId(Long cartId) {
+        return cartItemRepository.findByCartId(cartId)
+                .orElseThrow(() -> new UserException(ResponseCodeEnum.CART_ITEM_NOT_FOUND));
+    }
+
+    public void deleteAllByMenuIdIn(Long cartId, List<Long> menuIds) {
+        cartItemRepository.deleteAllByMenuIdIn(cartId, menuIds);
     }
 }
