@@ -28,39 +28,20 @@ public class OrderAdapter {
         return userCartMenus;
     }
 
-    public List<Order> saveAll(List<Order> orders) {
-        return orderRepository.saveAll(orders);
-    }
-
     public Order save(Order order) {
         return orderRepository.save(order);
     }
-
-//    public List<Order> findByUserId(Long userId) {
-//        List<Order> orders = orderRepository.findByUserIdOrderByOrderGroupDesc(userId);
-//        if (orders.isEmpty()) {
-//            throw new UserNotFoundException(ResponseCodeEnum.USER_NOT_FOUND);
-//        }
-//        return orders;
-//    }
 
     public Page<Order> findAllByUserId(Long userId, Pageable pageable) {
         return orderRepository.findAllByUserId(userId, pageable);
     }
 
-//    public List<Order> findByOrderGroup(Long orderGroup) {
-//        List<Order> orders = orderRepository.findByOrderGroup(orderGroup);
-//        if (orders.isEmpty()) {
-//            throw new OrdersNotFoundException(ResponseCodeEnum.ORDER_NOT_FOUND);
-//        }
-//        return orders;
-//    }
-
-    public void deleteCart(Long userId) {
-//        cartRepository.deleteByUserId(userId);
+    public Order findById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrdersNotFoundException(ResponseCodeEnum.ORDER_NOT_FOUND));
     }
 
-//    public void deleteByOrderGroup(Long orderGroup) {
-//        orderRepository.deleteByOrderGroup(orderGroup);
-//    }
+    public void deleteById(Long orderId) {
+        orderRepository.deleteById(orderId);
+    }
 }

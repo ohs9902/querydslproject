@@ -4,12 +4,9 @@ import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
 import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
-import com.sparta.redirect_outsourcing.domain.cart.entity.Cart;
 import com.sparta.redirect_outsourcing.domain.order.dto.OrderCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.order.dto.OrderResponseDto;
-import com.sparta.redirect_outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.redirect_outsourcing.domain.order.service.OrderService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -32,7 +27,7 @@ public class OrderController {
             @AuthenticationPrincipal UserDetailsImpl loginUser,
             @RequestBody OrderCreateRequestDto requestDto
     ) {
-        OrderResponseDto responseDto = orderService.createOrder(requestDto, loginUser.getUser());
+        OrderResponseDto responseDto = orderService.createOrder(loginUser.getUser(), requestDto);
         return ResponseUtils.of(HttpStatus.OK, "주문 저장 성공", responseDto);
     }
 
@@ -49,18 +44,22 @@ public class OrderController {
         );
         return ResponseUtils.of(HttpStatus.OK, "주문 전체 조회 성공", responseDtoList);
     }
-//
-//    @GetMapping("/{orderGroup}")
-//    public ResponseEntity<DataResponseDto<OrderResponseDto>> findOrder(
-//            @PathVariable Long orderGroup
-//    ) {
-//        OrderResponseDto responseDto = orderService.findOrder(orderGroup);
-//        return ResponseUtils.of(HttpStatus.OK, "주문 단일 조회 성공", responseDto);
-//    }
-//
-//    @DeleteMapping("/{orderGroup}")
-//    public ResponseEntity<MessageResponseDto> deleteOrder(@PathVariable Long orderGroup) {
-//        orderService.deleteOrder(orderGroup);
-//        return ResponseUtils.of(HttpStatus.OK, "주문 삭제 성공");
-//    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<DataResponseDto<OrderResponseDto>> findOrder(
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
+            @PathVariable Long orderId
+    ) {
+        OrderResponseDto responseDto = orderService.findOrder(loginUser.getUser(), orderId);
+        return ResponseUtils.of(HttpStatus.OK, "주문 단일 조회 성공", responseDto);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<MessageResponseDto> deleteOrder(
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
+            @PathVariable Long orderId
+    ) {
+        orderService.deleteOrder(loginUser.getUser(), orderId);
+        return ResponseUtils.of(HttpStatus.OK, "주문 삭제 성공");
+    }
 }

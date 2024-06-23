@@ -25,13 +25,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE c.users_id = :userId", nativeQuery = true)
     List<findUserCartMenusDto> findUserCartMenus(@Param("userId") Long userId);
 
-//    List<Order> findByUserIdOrderByOrderGroupDesc(Long userId);
-//
-//    List<Order> findByOrderGroup(Long orderGroup);
-//
-//    void deleteByOrderGroup(Long orderGroup);
-
     Page<Order> findAllByUserId(Long userId, Pageable pageable);
-
-
 }

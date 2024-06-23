@@ -16,6 +16,7 @@ public enum ResponseCodeEnum {
     INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, "현재 비밀번호가 유효하지 않습니다."),
     SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "새 비밀번호는 이전 비밀번호와 다르게 설정해야 합니다."),
     UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 사진 업로드 중 오류가 발생했습니다."),
+    USER_NOT_MATCH(HttpStatus.FORBIDDEN, "이 작업을 수행할 권한이 없습니다. 로그인을 확인해 주세요."),
     // 주문
     CART_MENUS_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니의 메뉴를 찾을 수 없습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 주문 내역을 찾을 수 없습니다."),
