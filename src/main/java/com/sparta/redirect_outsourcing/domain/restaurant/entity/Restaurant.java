@@ -75,7 +75,7 @@ public class Restaurant extends TimeStampEntity {
     }
 
     public void verify(User user) {
-        if (!user.getUsername().equals(this.getUser().getUsername())) {
+        if (!user.getUsername().equals(this.user.getUsername())) {
             throw new NotYourRestaurantException(ResponseCodeEnum.NOT_YOUR_RESTAURANT,user);
         }
     }
