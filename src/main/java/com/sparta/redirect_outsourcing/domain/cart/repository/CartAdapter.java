@@ -28,6 +28,8 @@ public class CartAdapter {
     public Cart save(Cart cart) {
         return cartRepository.save(cart);
     }
+
+    public void deleteByIdAndUserId(Long cartsId, Long userId) {
+        cartRepository.deleteByIdAndUsersId(cartsId, userId);
+    }
 }
-
-
