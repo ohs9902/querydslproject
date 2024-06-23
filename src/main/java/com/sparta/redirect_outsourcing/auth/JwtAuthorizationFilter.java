@@ -4,7 +4,6 @@ import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
 import com.sparta.redirect_outsourcing.exception.custom.user.TokensException;
-import com.sparta.redirect_outsourcing.exception.custom.user.UserException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -74,20 +73,18 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             boolean accessTokenValid = jwtProvider.validateToken(accessToken);
             if (accessTokenValid) {
                 log.info("handleValidAccessToken");
-                handleValidAccessToken(req, res, filterChain, accessToken); // 엑세스 토큰의 유효성을 검증합니다.
+                handleValidAccessToken(accessToken); // 엑세스 토큰의 유효성을 검증합니다.
             } else {
                 // 액세스 토큰이 유효하지 않다면 리프레시 토큰을 통해 액세스 토큰을 재발급 시도
                 log.info("handleExpiredAccessToken");
-                handleExpiredAccessToken(req, res, filterChain);
+                handleExpiredAccessToken(req, res);
             }
-        } else {
-            handleInvalidTokens();
         }
+        filterChain.doFilter(req, res);
     }
 
     // 유효한 Access Token 처리
-    private void handleValidAccessToken(HttpServletRequest req, HttpServletResponse res,
-                                        FilterChain filterChain, String accessToken)
+    private void handleValidAccessToken(String accessToken)
             throws IOException, ServletException {
         // 액세스 토큰에서 클레임(사용자 정보)을 추출
         Claims accessTokenClaims = jwtProvider.getUserInfoFromToken(accessToken);
@@ -95,13 +92,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 사용자 인증 설정
         setAuthentication(username);
-        // 요청 필터링 수행
-        filterChain.doFilter(req, res);
     }
 
     // 액세스 토큰이 만료된 경우 리프레시 토큰을 통해 액세스 토큰을 재발급
-    private void handleExpiredAccessToken(HttpServletRequest req, HttpServletResponse res,
-                                          FilterChain filterChain) throws IOException, ServletException {
+    private void handleExpiredAccessToken(HttpServletRequest req, HttpServletResponse res) {
         String refreshToken = jwtProvider.getRefreshTokenFromHeader(req);
         // refreshToken이 null이 아니고 비어 있지 않으며 유효한 텍스트를 포함하고 있는지 확인, 유효성 확인
         if (StringUtils.hasText(refreshToken) && jwtProvider.validateToken(refreshToken)) {
@@ -114,7 +108,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String newAccessToken = jwtProvider.createAccessToken(username);
                 res.addHeader(JwtProvider.AUTHORIZATION_HEADER, newAccessToken);
                 setAuthentication(username);
-                filterChain.doFilter(req, res);
             } else {
                 handleInvalidTokens();
             }
