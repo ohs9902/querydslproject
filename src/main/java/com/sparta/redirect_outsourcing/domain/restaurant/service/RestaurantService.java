@@ -1,6 +1,5 @@
 package com.sparta.redirect_outsourcing.domain.restaurant.service;
 
-import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantUpdateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.responseDto.RestaurantResponseDto;
@@ -8,7 +7,6 @@ import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantRepository;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
-import com.sparta.redirect_outsourcing.exception.custom.restaurant.RestaurantNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,8 @@ public class RestaurantService {
 
     /************가게 등록*************/
     @Transactional
-    public RestaurantResponseDto createRestaurant(RestaurantCreateRequestDto req) {
-        Restaurant restaurant = new Restaurant(req);
+    public RestaurantResponseDto createRestaurant(RestaurantCreateRequestDto createReq, User user) {
+        Restaurant restaurant = new Restaurant(createReq,user);
         restaurantRepository.save(restaurant);
         return new RestaurantResponseDto(restaurant);
 
@@ -44,10 +42,10 @@ public class RestaurantService {
 
     /************가게 정보 변경*************/
     @Transactional
-    public RestaurantResponseDto updateRestaurant(Long restaurantId, RestaurantUpdateRequestDto req, User user) {
+    public RestaurantResponseDto updateRestaurant(Long restaurantId, RestaurantUpdateRequestDto updateReq, User user) {
         Restaurant restaurant = restaurantAdapter.findById(restaurantId);
         restaurant.verify(user);
-        restaurant.update(req);
+        restaurant.update(updateReq);
         return new RestaurantResponseDto(restaurant);
 
     }

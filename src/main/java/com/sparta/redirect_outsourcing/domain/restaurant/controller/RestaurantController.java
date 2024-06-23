@@ -36,7 +36,8 @@ public class RestaurantController {
             @Valid @RequestBody RestaurantCreateRequestDto req,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             BindingResult bindingResult) {
-        RestaurantResponseDto responseDto= restaurantService.createRestaurant(req);
+        User user = userDetails.getUser();
+        RestaurantResponseDto responseDto= restaurantService.createRestaurant(req,user);
         return of(HttpStatus.OK, "가게 등록이 완료되었습니다.", responseDto);
     }
 
@@ -59,9 +60,9 @@ public class RestaurantController {
     @PutMapping("/{restaurantId}")
     public ResponseEntity<DataResponseDto<RestaurantResponseDto>> updateRestaurant(
             @PathVariable Long restaurantId,
-            @Valid @RequestBody RestaurantUpdateRequestDto req,
+            @Valid @RequestBody RestaurantUpdateRequestDto updateReq,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(restaurantId, req,userDetails.getUser());
+        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(restaurantId, updateReq,userDetails.getUser());
         return of(HttpStatus.OK, responseDto.getName() + "의 정보 변경이 완료되었습니다.",responseDto);
     }
 

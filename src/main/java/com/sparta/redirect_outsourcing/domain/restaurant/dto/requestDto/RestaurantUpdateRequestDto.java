@@ -13,7 +13,7 @@ public class RestaurantUpdateRequestDto {
     private String address;
 
     @NotBlank
-    private RestaurntCategoryEnum category;
+    private String category;
 
     @NotBlank
     private String description;

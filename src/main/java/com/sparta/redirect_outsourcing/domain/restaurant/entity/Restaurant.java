@@ -49,15 +49,11 @@ public class Restaurant extends TimeStampEntity {
 
 
 
-    public Restaurant(RestaurantCreateRequestDto createReq) {
+    public Restaurant(RestaurantCreateRequestDto createReq, User user) {
+        this.user = user;
         this.name = createReq.getName();
         this.address = createReq.getAddress();
-        String categoryName= RestaurntCategoryEnum.checkCategory(createReq.getCategory());
-        //예외처리 카테고리 양식에 맞지 않을 경우
-        if(categoryName!=null)
-            this.category = RestaurntCategoryEnum.valueOf(categoryName);
-        else
-            throw new NotExistRestaurantCategoryException(ResponseCodeEnum.NOT_EXIST_CATEGORY);
+        this.category = enumCheck(createReq.getCategory());
         this.description = createReq.getDescription();
     }
 
@@ -65,12 +61,22 @@ public class Restaurant extends TimeStampEntity {
     public void update(RestaurantUpdateRequestDto updateReq) {
         this.name = updateReq.getName();
         this.address = updateReq.getAddress();
-        this.category = updateReq.getCategory();
+        this.category = enumCheck(updateReq.getCategory());
         this.description = updateReq.getDescription();
+    }
+    //예외처리 카테고리 양식에 맞지 않을 경우
+    private RestaurntCategoryEnum enumCheck(String reqCategory) {
+        String categoryName= RestaurntCategoryEnum.checkCategory(reqCategory);
+
+        if(categoryName!=null)
+            return RestaurntCategoryEnum.valueOf(categoryName);
+        else
+            throw new NotExistRestaurantCategoryException(ResponseCodeEnum.NOT_EXIST_CATEGORY);
     }
 
     public void verify(User user) {
-        if(!user.equals(this.user))
+        if (!user.getUsername().equals(this.getUser().getUsername())) {
             throw new NotYourRestaurantException(ResponseCodeEnum.NOT_YOUR_RESTAURANT,user);
+        }
     }
 }
