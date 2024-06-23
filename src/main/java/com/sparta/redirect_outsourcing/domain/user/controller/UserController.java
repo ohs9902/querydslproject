@@ -37,23 +37,23 @@ public class UserController {
 
     // 비밀번호 변경
     @PutMapping("/password")
-    public ResponseEntity<MessageResponseDto> updatePassword(@AuthenticationPrincipal @Validated @RequestBody UpdatePasswordRequestDto requestDto) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = userDetails.getUser().getId();
-
-        userService.updatePassword(userId, requestDto);
+    public ResponseEntity<MessageResponseDto> updatePassword(
+            @AuthenticationPrincipal UserDetailsImpl loginUser,
+            @Validated @RequestBody UpdatePasswordRequestDto requestDto
+    ) {
+        userService.updatePassword(loginUser.getUser(), requestDto);
         return ResponseUtils.of(HttpStatus.OK, "비밀번호 변경 성공");
     }
 
     // 프로필 업로드
     @PutMapping("/profile")
-    public ResponseEntity<MessageResponseDto> updateProfile(
+    public ResponseEntity<DataResponseDto<ProfileResponseDto>> updateProfile(
             @Validated @RequestPart("updateProfileRequestDto") UpdateProfileRequestDto requestDto,
             @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        userService.updateProfile(user, requestDto, profilePicture);
-        return ResponseUtils.of(HttpStatus.OK, "프로필 수정 성공");
+        ProfileResponseDto profileResponseDto = userService.updateProfile(user, requestDto, profilePicture);
+        return ResponseUtils.of(HttpStatus.OK, "프로필 수정 성공", profileResponseDto);
     }
 
     // 프로필 조회
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     // 회원 탈퇴
-    @PutMapping("/withdraw")
+    @DeleteMapping("/withdraw")
     public ResponseEntity<MessageResponseDto> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         userService.deleteUser(user);

@@ -22,7 +22,7 @@ public class UserAdapter {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserException(ResponseCodeEnum.USER_NOT_FOUND));
     }
-    public void save(User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }
