@@ -34,10 +34,10 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<DataResponseDto<Page<OrderResponseDto>>> findOrders(
             @AuthenticationPrincipal UserDetailsImpl loginUser,
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false) boolean isAsc
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "5") int size,
+            @RequestParam(required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(required = false, defaultValue = "false") boolean isAsc
     ) {
         Page<OrderResponseDto> responseDtoList = orderService.findOrders(
                 loginUser.getUser(), page-1, size, sortBy, isAsc
