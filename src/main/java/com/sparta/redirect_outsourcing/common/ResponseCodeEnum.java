@@ -19,9 +19,10 @@ public enum ResponseCodeEnum {
     USER_NOT_MATCH(HttpStatus.FORBIDDEN, "이 작업을 수행할 권한이 없습니다. 로그인을 확인해 주세요."),
 
     //가게
-    RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, "텅~ 가게를 찾을 수 없습니다."),
+    RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, "텅~ 가게를 찾을 수 없습니다."), //가게 조회시
     NOT_YOUR_RESTAURANT(HttpStatus.UNAUTHORIZED,"님의 가게가 아닙니다."),
     NOT_EXIST_CATEGORY(HttpStatus.NOT_FOUND, "올바른 형식을 입력해주십시오."),
+    RESTAURANT_NOT_EXIST(HttpStatus.NOT_FOUND,"존재하지 않는 가게입니다."), //특정 가게에 대한 API요청 ex)찜하기
 
     // 주문
     CART_MENUS_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니의 메뉴를 찾을 수 없습니다."),
@@ -39,7 +40,11 @@ public enum ResponseCodeEnum {
     //메뉴
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND,"메뉴를 찾을 수 없습니다."),
     MENU_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"카테고리를 찾을 수 없습니다."),
-    MENU_USER_NOT_MATCH(HttpStatus.FORBIDDEN,"다른 유저가 생성한 메뉴는 수정 삭제 할 수 없습니다.")
+    MENU_USER_NOT_MATCH(HttpStatus.FORBIDDEN,"다른 유저가 생성한 메뉴는 수정 삭제 할 수 없습니다."),
+
+    //찜하기
+    ALREADY_FOLLOWED(HttpStatus.MULTI_STATUS,"이미 찜한 가게입니다.")
+
     ;
     private final HttpStatus httpStatus;
     private final String message;

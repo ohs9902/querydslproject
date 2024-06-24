@@ -16,7 +16,7 @@ public class RestaurantAdapter {
     private final RestaurantRepository restaurantRepository;
 
     public Restaurant findById(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(ResponseCodeEnum.RESTAURANT_NOT_FOUND));
+        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(ResponseCodeEnum.RESTAURANT_NOT_EXIST));
     }
 
     public Restaurant save(Restaurant restaurant) {

@@ -20,7 +20,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -32,8 +31,7 @@ public class WebSecurityConfig {
     private final ObjectMapper objectMapper;
     private final UserAdapter userAdapter;
 
-
-    //  사용자 인증을 처리하는 컴포넌트
+    // 사용자 인증을 처리하는 컴포넌트
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
@@ -43,7 +41,7 @@ public class WebSecurityConfig {
     // 사용자 로그인 시 JWT를 생성하고 반환하는 필터
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userAdapter,objectMapper);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userAdapter, objectMapper);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -51,7 +49,7 @@ public class WebSecurityConfig {
     // 모든 요청에 대해 JWT의 유효성을 검사하고, 유효한 토큰일 경우 사용자를 인증 상태로 설정하는 필터
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtProvider, userDetailsService, userAdapter);
+        return new JwtAuthorizationFilter(jwtProvider, userDetailsService, userAdapter, objectMapper);
     }
 
     // 위에 정의된 필터를 사용하여 필터 체인을 구성
@@ -70,8 +68,8 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/", "/error", "/users/signup", "/users/login").permitAll() // 메인 페이지, 에러 페이지, 회원가입, 로그인 요청 허가
                         .requestMatchers(HttpMethod.GET, "/users/*").permitAll() // GET 요청의 /users/{userId} 허가
+                        .requestMatchers(HttpMethod.GET, "/users/kakao/*").permitAll() // 카카오 로그인, 콜백 허용
                         .requestMatchers(HttpMethod.GET, "/restaurants/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/menus/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
