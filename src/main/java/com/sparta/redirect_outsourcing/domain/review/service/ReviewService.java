@@ -48,7 +48,6 @@ public class ReviewService {
         reviewAdapter.delete(review);
     }
 
-    //싣당 부분 완성후 수정할 예정
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviews(){
         List<Review> reviews = reviewAdapter.findAll();

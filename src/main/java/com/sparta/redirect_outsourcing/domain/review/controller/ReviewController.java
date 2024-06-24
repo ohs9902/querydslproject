@@ -40,7 +40,6 @@ public class ReviewController {
         return ResponseUtils.of(HttpStatus.OK,"리뷰 삭제 성공");
     }
 
-    //Todo 음식점기능 완료되면 해당 음식점의 리뷰를 불러올 수 있도록 해야 됨
     @GetMapping("/restaurants/reviews")
     public ResponseEntity<DataResponseDto<List<ReviewResponseDto>>>getReviewList(){
         List<ReviewResponseDto> reviews = reviewService.getReviews();
