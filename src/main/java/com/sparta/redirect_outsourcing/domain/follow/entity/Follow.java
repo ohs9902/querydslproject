@@ -1,6 +1,7 @@
 package com.sparta.redirect_outsourcing.domain.follow.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
+import com.sparta.redirect_outsourcing.domain.follow.dto.requestDto.FollowCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -25,4 +26,9 @@ public class Follow extends TimeStampEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
+
+    public Follow(User user, Restaurant restaurant) {
+        this.user = user;
+        this.restaurant = restaurant;
+    }
 }

@@ -43,21 +43,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String uri = req.getRequestURI();
         log.info("Requested URI: {}", uri);
 
-        // 회원가입과 로그인 엔드포인트는 필터링하지 않음
-        if (uri.equals("/users/signup") || uri.equals("/users/login")) {
-            filterChain.doFilter(req, res);
-            return;
-        }
-
         // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
         String accessToken = jwtProvider.getAccessTokenFromHeader(req);
-
-        // GET 요청에 대해서는 인증을 요구하지 않음
-        if (req.getMethod().equals(HttpMethod.GET.name()) && (uri.startsWith("/users/") || uri.startsWith("/restaurants"))) {
-            filterChain.doFilter(req, res);
-            System.out.println("GET요청에 대해서는 인증을 요구하지 않음");
-            return;
-        }
 
 
         if (StringUtils.hasText(accessToken)) {

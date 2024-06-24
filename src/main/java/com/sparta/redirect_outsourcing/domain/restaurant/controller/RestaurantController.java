@@ -34,8 +34,7 @@ public class RestaurantController {
     @PostMapping
     public ResponseEntity<DataResponseDto<RestaurantResponseDto>> createRestaurant(
             @Valid @RequestBody RestaurantCreateRequestDto req,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            BindingResult bindingResult) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         RestaurantResponseDto responseDto= restaurantService.createRestaurant(req,user);
         return of(HttpStatus.OK, "가게 등록이 완료되었습니다.", responseDto);
