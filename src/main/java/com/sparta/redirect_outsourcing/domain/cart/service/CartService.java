@@ -70,7 +70,7 @@ public class CartService {
         return new CartItemResponseDto(
             cartItem.getId(),
             cartItem.getCart().getId(),
-            cartItem.getMenu().getId(),
+            cartItem.getMenu().getName(),
             cartItem.getQuantity(),
             cartItem.getQuantityPrice()
         );
