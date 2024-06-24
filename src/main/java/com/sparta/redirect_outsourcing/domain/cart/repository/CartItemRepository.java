@@ -15,9 +15,9 @@ public interface CartItemRepository extends JpaRepository<CartItem,Long> {
     void deleteAllByMenuIdIn(List<Long> menuIds);
 
     // 이거는 확실하지 않음 쿼리 날려봐야 됨
-    @Modifying
-    @Query("DELETE FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.menu.id IN : menuIds")
-    void deleteAllByMenuIdIn(@Param("cartId") Long cartId, @Param("menuIds") List<Long> menuIds);
+//    @Modifying
+//    @Query("DELETE FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.menu.id IN : menuIds")
+//    void deleteAllByMenuIdIn(@Param("cartId") Long cartId, @Param("menuIds") Long menuId);
 
     List<CartItem> findAllByCartId(Long cartId);
 
