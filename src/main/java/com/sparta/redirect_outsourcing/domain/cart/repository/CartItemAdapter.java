@@ -46,6 +46,6 @@ public class CartItemAdapter {
     }
 
     public void deleteAllByMenuIdIn(Long cartId, List<Long> menuIds) {
-        cartItemRepository.deleteAllByMenuIdIn(cartId, menuIds);
+        cartItemRepository.deleteAllByMenuIdIn(menuIds);
     }
 }

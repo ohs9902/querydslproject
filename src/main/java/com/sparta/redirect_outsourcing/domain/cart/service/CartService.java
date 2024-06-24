@@ -7,6 +7,7 @@ import com.sparta.redirect_outsourcing.domain.cart.entity.CartItem;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartAdapter;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartItemAdapter;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
+import com.sparta.redirect_outsourcing.domain.menu.repository.MenuAdapter;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
 
@@ -23,7 +24,7 @@ public class CartService {
     private final CartAdapter cartAdapter;
     private final CartItemAdapter cartItemAdapter;
     private final UserAdapter userAdapter;
-//    private final MenuAdapter menuAdapter;
+    private final MenuAdapter menuAdapter;
 
     @Transactional
     public CartItemResponseDto addItemToCart(User loginUser, CartItemRequestDto requestDto) {
@@ -64,7 +65,7 @@ public class CartService {
     public void deleteCartItems(User user, List<Long> menuIds) {
         // 여기는 확실하지 않아요. 한번 해봐야 알 것 같아요.
         Cart findCart = cartAdapter.findByUserId(user.getId());
-        cartItemAdapter.deleteAllByMenuIdIn(findCart.getId(), menuIds);
+        cartItemAdapter.deleteAllByMenuIdIn(menuIds);
     }
 
     private  CartItemResponseDto toDto(CartItem cartItem) {
