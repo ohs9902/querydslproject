@@ -1,6 +1,5 @@
 package com.sparta.redirect_outsourcing.domain.menu.service;
 
-import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.redirect_outsourcing.domain.menu.dto.MenuResponseDto;
@@ -11,7 +10,6 @@ import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.exception.custom.menu.MenuCategoryNotFoundException;
-import com.sparta.redirect_outsourcing.exception.custom.menu.MenuException;
 import com.sparta.redirect_outsourcing.exception.custom.user.UserNotMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static java.rmi.server.LogStream.log;
 
 @Service
 @Slf4j
@@ -75,8 +70,8 @@ public class MenuService {
 
     //식당 기능 병합후 수정 예정
     @Transactional(readOnly = true)
-    public List<MenuResponseDto> getAllMenu(){
-        List<Menu> menus = menuAdapter.findAll();
+    public List<MenuResponseDto> getAllMenu(Long restaurantId){
+        List<Menu> menus = menuAdapter.findAllByRestaurantId(restaurantId);
         List<MenuResponseDto> responseDtos = new ArrayList<>();
         for (Menu menu : menus) {
             responseDtos.add(MenuResponseDto.of(menu));

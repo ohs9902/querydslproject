@@ -56,9 +56,9 @@ public class MenuController {
     }
 
     //식당 기능 병합후 수정 예정
-    @GetMapping("/menus")
-    public ResponseEntity<DataResponseDto<List<MenuResponseDto>>> getAllMenu(){
-        List<MenuResponseDto> responseDtos = menuService.getAllMenu();
+    @GetMapping("/restaurants/menus/{restaurantId}")
+    public ResponseEntity<DataResponseDto<List<MenuResponseDto>>> getAllMenu(@PathVariable Long restaurantId){
+        List<MenuResponseDto> responseDtos = menuService.getAllMenu(restaurantId);
         return ResponseUtils.of(HttpStatus.OK,"메뉴 전체 조회 성공" , responseDtos );
     }
 }

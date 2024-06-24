@@ -24,9 +24,10 @@ public class MenuAdapter {
         return menuRepository.findById(id)
                 .orElseThrow(()-> new MenuNotFoundException(ResponseCodeEnum.MENU_NOT_FOUND));
     }
-    public List<Menu> findAll(){
-        return menuRepository.findAll();
+    public List<Menu> findAllByRestaurantId(Long restaurantId){
+        return menuRepository.findAllByRestaurantId(restaurantId);
     }
+
     public void delete(Menu menu){
         menuRepository.delete(menu);
     }
