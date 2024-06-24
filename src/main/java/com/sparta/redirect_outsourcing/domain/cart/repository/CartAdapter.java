@@ -36,7 +36,7 @@ public class CartAdapter {
     }
 
     public Cart findByUserId(Long userId) {
-        return cartRepository.findById(userId)
+        return cartRepository.findByUsersId(userId)
                 .orElseGet(() -> cartRepository.save(new Cart(null, userId)));
     }
 

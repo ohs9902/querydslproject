@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.cart.controller;
 
 import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
+import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemRequestDto;
 import com.sparta.redirect_outsourcing.domain.cart.dto.CartItemResponseDto;
@@ -45,7 +46,7 @@ public class CartController {
             @AuthenticationPrincipal UserDetailsImpl loginUser
     ) {
         List<CartItemResponseDto> cartItems = cartService.getCartItems(loginUser.getUser());
-        return ResponseUtils.of(HttpStatus.OK, "Cart items viewed successfully", cartItems);
+        return ResponseUtils.of(HttpStatus.OK, "장바구니 조회 성공", cartItems);
     }
 
     // 장바구니 수정
@@ -55,17 +56,18 @@ public class CartController {
             @RequestBody CartItemRequestDto requestDto
     ) {
         CartItemResponseDto responseDto = cartService.updateCartItem(loginUser.getUser(), requestDto);
-        return ResponseUtils.of(HttpStatus.OK, "Cart item updated successfully", responseDto);
+        return ResponseUtils.of(HttpStatus.OK, "장바구니 수정 성공", responseDto);
     }
 
      // 장바구니 삭제 - 메뉴 만들어지면 사용 가능
     @DeleteMapping("/carts")
-    public ResponseEntity<DataResponseDto<Void>> deleteCartItems(
+    public ResponseEntity<MessageResponseDto> deleteCartItems(
             @AuthenticationPrincipal UserDetailsImpl loginUser,
             @RequestParam List<Long> menuIds
     ) {
+        System.out.println(menuIds);
         cartService.deleteCartItems(loginUser.getUser(), menuIds);
-        return ResponseUtils.of(HttpStatus.OK, "Cart items deleted successfully", null);
+        return ResponseUtils.of(HttpStatus.OK, "장바구니 삭제 성공");
     }
 
 

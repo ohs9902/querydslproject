@@ -11,15 +11,17 @@ import org.springframework.data.repository.query.Param;
 public interface CartItemRepository extends JpaRepository<CartItem,Long> {
 
     @Modifying
-    @Query("DELETE FROM CartItem ci WHERE ci.menu.id IN : menuIds")
-    void deleteAllByMenuIdIn(List<Long> menuIds);
+    @Query("DELETE FROM CartItem ci WHERE ci.menu.id IN :menuIds")
+    void deleteAllByMenuIdIn(@Param("menuIds") List<Long> menuIds);
 
     // 이거는 확실하지 않음 쿼리 날려봐야 됨
-    @Modifying
-    @Query("DELETE FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.menu.id IN : menuIds")
-    void deleteAllByMenuIdIn(@Param("cartId") Long cartId, @Param("menuIds") List<Long> menuIds);
+//    @Modifying
+//    @Query("DELETE FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.menu.id IN : menuIds")
+//    void deleteAllByMenuIdIn(@Param("cartId") Long cartId, @Param("menuIds") List<Long> menuIds);
 
     List<CartItem> findAllByCartId(Long cartId);
 
-    Optional<CartItem> findByCartId(Long cartId);
+    Optional<CartItem> findByCartIdAndMenuId(Long cartId, Long menuId);
+
+    void deleteByCartId(Long cartsId);
 }

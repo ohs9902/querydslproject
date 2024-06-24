@@ -7,6 +7,7 @@ import com.sparta.redirect_outsourcing.domain.cart.entity.CartItem;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartAdapter;
 import com.sparta.redirect_outsourcing.domain.cart.repository.CartItemAdapter;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
+import com.sparta.redirect_outsourcing.domain.menu.repository.MenuAdapter;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
 
@@ -22,8 +23,7 @@ public class CartService {
 
     private final CartAdapter cartAdapter;
     private final CartItemAdapter cartItemAdapter;
-    private final UserAdapter userAdapter;
-//    private final MenuAdapter menuAdapter;
+    private final MenuAdapter menuAdapter;
 
     @Transactional
     public CartItemResponseDto addItemToCart(User loginUser, CartItemRequestDto requestDto) {
@@ -34,12 +34,10 @@ public class CartService {
                 findCart,
                 menu,
                 requestDto.getQuantity(),
-                requestDto.getQuantity() * 2
-
+                requestDto.getQuantity() * menu.getPrice()
         );
         CartItem savedCartItem = cartItemAdapter.save(cartItem);
         return new CartItemResponseDto(savedCartItem);
-
     }
 
     @Transactional(readOnly = true)
@@ -53,9 +51,9 @@ public class CartService {
     @Transactional
     public CartItemResponseDto updateCartItem(User user, CartItemRequestDto requestDto) {
         Cart findCart = cartAdapter.findByUserId(user.getId());
-        CartItem findCartItems = cartItemAdapter.findByCartId(findCart.getId());
+        CartItem findCartItems = cartItemAdapter.findByCartId(findCart.getId(), requestDto.getMenusId());
         Menu menu = menuAdapter.findById(requestDto.getMenusId());
-        findCartItems.update(findCart, menu, requestDto.getQuantity(), requestDto.getQuantity() * 2);
+        findCartItems.update(findCart, menu, requestDto.getQuantity(), requestDto.getQuantity() * menu.getPrice());
         cartItemAdapter.save(findCartItems);
         return toDto(findCartItems);
     }
@@ -64,14 +62,14 @@ public class CartService {
     public void deleteCartItems(User user, List<Long> menuIds) {
         // 여기는 확실하지 않아요. 한번 해봐야 알 것 같아요.
         Cart findCart = cartAdapter.findByUserId(user.getId());
-        cartItemAdapter.deleteAllByMenuIdIn(findCart.getId(), menuIds);
+        cartItemAdapter.deleteAllByMenuIdIn(menuIds);
     }
 
-    private  CartItemResponseDto toDto(CartItem cartItem) {
+    private CartItemResponseDto toDto(CartItem cartItem) {
         return new CartItemResponseDto(
             cartItem.getId(),
             cartItem.getCart().getId(),
-            cartItem.getMenu().getId(),
+            cartItem.getMenu().getName(),
             cartItem.getQuantity(),
             cartItem.getQuantityPrice()
         );
