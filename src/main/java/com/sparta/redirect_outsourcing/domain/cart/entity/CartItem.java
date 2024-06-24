@@ -32,11 +32,11 @@ public class CartItem extends TimeStampEntity {
     @JoinColumn(name = "menus_id", nullable = false)
     private Menu menu;
 
-    public CartItem(Long quantity, Long quantityPrice, Cart cart, Menu menu) {
-        this.quantity = quantity;
-        this.quantityPrice = quantityPrice;
+    public CartItem(Cart cart, Menu menu, Long quantity, Long quantityPrice) {
         this.cart = cart;
         this.menu = menu;
+        this.quantity = quantity;
+        this.quantityPrice = quantityPrice;
     }
 
     public void update(Cart cart, Menu menu, Long quantity, Long quantityPrice) {
@@ -45,18 +45,4 @@ public class CartItem extends TimeStampEntity {
         this.quantity = quantity;
         this.quantityPrice = quantityPrice;
     }
-
-//    public CartItem(Cart cart /*Menu menu*/, Long quantity, Long quantityPrice) {
-//        this.cart = cart;
-////        this.menu = menu;
-//        this.quantity = quantity;
-//        this.quantityPrice = quantityPrice;
-//    }
-//
-//    public void update(Cart cart, Long quantity, Long quantityPrice) {
-//        this.cart = cart;
-////        this.menu = menu;
-//        this.quantity = quantity;
-//        this.quantityPrice = quantityPrice;
-//    }
 }
