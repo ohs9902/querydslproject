@@ -20,7 +20,6 @@ import static com.sparta.redirect_outsourcing.common.ResponseUtils.of;
 
 @Slf4j
 @RestController
-@ResponseBody
 @RequiredArgsConstructor
 public class FollowController {
 
@@ -37,15 +36,11 @@ public class FollowController {
         return of(HttpStatus.OK, "찜하기 취소");
     }
 
-    @GetMapping("/users/{userId}/follows")
+    @GetMapping("/follows")
     public ResponseEntity<DataResponseDto<List<FollowResponseDto>>> getFollows(
-            @PathVariable Long userId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         List<FollowResponseDto> follows = followService.getFollows(user);
         return of(HttpStatus.OK, "찜목록을 조회합니다", follows);
     }
-
-
-
 }
