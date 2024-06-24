@@ -1,5 +1,6 @@
 package com.sparta.redirect_outsourcing.domain.follow.repository;
 
+import com.sparta.redirect_outsourcing.domain.follow.dto.responseDto.FollowResponseDto;
 import com.sparta.redirect_outsourcing.domain.follow.entity.Follow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

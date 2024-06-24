@@ -1,5 +1,6 @@
 package com.sparta.redirect_outsourcing.domain.follow.service;
 
+import com.sparta.redirect_outsourcing.domain.follow.dto.responseDto.FollowResponseDto;
 import com.sparta.redirect_outsourcing.domain.follow.entity.Follow;
 import com.sparta.redirect_outsourcing.domain.follow.repository.FollowAdapter;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
@@ -8,6 +9,7 @@ import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +30,9 @@ public class FollowService {
             followAdapter.save(new Follow(user, restaurant));
             return true;
         }
+    }
+
+    public List<FollowResponseDto> getFollows(User user) {
+        return followAdapter.findById(user.getId()).stream().map(FollowResponseDto::new).toList();
     }
 }

@@ -52,13 +52,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
         String accessToken = jwtProvider.getAccessTokenFromHeader(req);
 
-        // GET 요청에 대해서는 인증을 요구하지 않음
-        if (req.getMethod().equals(HttpMethod.GET.name()) && (uri.startsWith("/users/") || uri.startsWith("/restaurants"))) {
-            filterChain.doFilter(req, res);
-            System.out.println("GET요청에 대해서는 인증을 요구하지 않음");
-            return;
-        }
-
 
         if (StringUtils.hasText(accessToken)) {
             // 액세스 토큰에서 클레임(사용자 정보)을 추출
