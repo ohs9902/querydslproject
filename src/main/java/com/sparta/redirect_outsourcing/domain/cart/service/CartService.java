@@ -23,8 +23,8 @@ public class CartService {
 
     private final CartAdapter cartAdapter;
     private final CartItemAdapter cartItemAdapter;
-    private final UserAdapter userAdapter;
     private final MenuAdapter menuAdapter;
+    private final UserAdapter userAdapter;
 
     @Transactional
     public CartItemResponseDto addItemToCart(User loginUser, CartItemRequestDto requestDto) {
@@ -35,12 +35,10 @@ public class CartService {
                 findCart,
                 menu,
                 requestDto.getQuantity(),
-                requestDto.getQuantity() * 2
-
+                requestDto.getQuantity() * menu.getPrice()
         );
         CartItem savedCartItem = cartItemAdapter.save(cartItem);
         return new CartItemResponseDto(savedCartItem);
-
     }
 
     @Transactional(readOnly = true)
@@ -54,9 +52,9 @@ public class CartService {
     @Transactional
     public CartItemResponseDto updateCartItem(User user, CartItemRequestDto requestDto) {
         Cart findCart = cartAdapter.findByUserId(user.getId());
-        CartItem findCartItems = cartItemAdapter.findByCartId(findCart.getId());
+        CartItem findCartItems = cartItemAdapter.findByCartId(findCart.getId(), requestDto.getMenusId());
         Menu menu = menuAdapter.findById(requestDto.getMenusId());
-        findCartItems.update(findCart, menu, requestDto.getQuantity(), requestDto.getQuantity() * 2);
+        findCartItems.update(findCart, menu, requestDto.getQuantity(), requestDto.getQuantity() * menu.getPrice());
         cartItemAdapter.save(findCartItems);
         return toDto(findCartItems);
     }
@@ -68,7 +66,7 @@ public class CartService {
         cartItemAdapter.deleteAllByMenuIdIn(menuIds);
     }
 
-    private  CartItemResponseDto toDto(CartItem cartItem) {
+    private CartItemResponseDto toDto(CartItem cartItem) {
         return new CartItemResponseDto(
             cartItem.getId(),
             cartItem.getCart().getId(),
