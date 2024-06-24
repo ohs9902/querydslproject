@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Table(name = "reviews")
@@ -24,6 +25,7 @@ public class Review extends TimeStampEntity {
     private Float rating;
     @Column(nullable = false)
     private String comment;
+    @Setter
     @Column(nullable = false)
     private int likeCount;
 
@@ -35,9 +37,11 @@ public class Review extends TimeStampEntity {
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
 
-    public Review(Float rating, String comment) {
+    public Review(Float rating, String comment, User user, Restaurant restaurant) {
         this.rating = rating;
         this.comment = comment;
+        this.user = user;
+        this.restaurant = restaurant;
         this.likeCount = 0;
     }
 
