@@ -42,3 +42,7 @@ cloud:
       static: us-east-2
     s3:
       bucket: sparta-storage
+
+kakao:
+  client-id: ${CLIENT-ID}
+  redirect-uri: http://localhost:8080/users/kakao/callback

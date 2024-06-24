@@ -52,9 +52,18 @@ public class User extends TimeStampEntity {
     private String refreshToken;
 
     @Column
-    private String kakaoId;
+    private Long kakaoId;
 
     @ElementCollection
     @Column
     private List<String> previousPasswords = new ArrayList<>();
+
+    public User(Long kakaoId, String username, String pictureUrl, String password) {
+        this.kakaoId = kakaoId;
+        this.pictureUrl = pictureUrl;
+        this.username = username;
+        this.password = password;
+        this.userStatus = UserStatusEnum.STATUS_NORMAL;
+        this.userRole = UserRoleEnum.ROLE_USER;
+    }
 }
