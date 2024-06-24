@@ -68,7 +68,6 @@ public class MenuService {
         return MenuResponseDto.of(menu);
     }
 
-    //식당 기능 병합후 수정 예정
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getAllMenu(Long restaurantId){
         List<Menu> menus = menuAdapter.findAllByRestaurantId(restaurantId);
