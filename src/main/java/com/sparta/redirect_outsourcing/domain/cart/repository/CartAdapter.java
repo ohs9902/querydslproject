@@ -6,6 +6,8 @@ import com.sparta.redirect_outsourcing.domain.cart.entity.CartItem;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.exception.custom.user.UserException;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,20 +18,27 @@ import org.springframework.stereotype.Component;
 public class CartAdapter {
     private final CartRepository cartRepository;
 
-    public Cart findById(Long id) {
-        return cartRepository.findById(id)
-            .orElseThrow(() -> new UserException(ResponseCodeEnum.CART_NOT_FOUND));
-    }
-
-    public List<CartItem> findAllByUsersId(Long usersId) {
-        return cartRepository.findAllByUsersId(usersId);
-    }
-
-    public Cart save(Cart cart) {
-        return cartRepository.save(cart);
-    }
+//    public Cart findById(Long id) {
+//        return cartRepository.findById(id)
+//            .orElseThrow(() -> new UserException(ResponseCodeEnum.CART_NOT_FOUND));
+//    }
+//
+//    public List<CartItem> findAllByUsersId(Long usersId) {
+//        return cartRepository.findAllByUsersId(usersId);
+//    }
+//
+//    public Cart save(Cart cart) {
+//        return cartRepository.save(cart);
+//    }
 
     public void deleteByIdAndUserId(Long cartsId, Long userId) {
         cartRepository.deleteByIdAndUsersId(cartsId, userId);
     }
+
+    public Cart findByUserId(Long userId) {
+        return cartRepository.findByUsersId(userId)
+                .orElseGet(() -> cartRepository.save(new Cart(null, userId)));
+    }
+
+
 }
