@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
+
     @Query(value = "SELECT c.users_id AS usersId, " +
             "ci.id AS cart_item_id, " +
             "m.name AS menuName, " +
@@ -19,9 +20,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "r.name AS restaurantName, " +
             "c.id AS cartsId " +
             "FROM carts c " +
-            "JOIN cart_items ci ON c.id = ci.carts_id " +
-            "JOIN menus m ON ci.menus_id = m.id " +
-            "JOIN restaurants r ON m.restaurants_id = r.id " +
+            "INNER JOIN cart_items ci ON c.id = ci.carts_id " +
+            "INNER JOIN menus m ON ci.menus_id = m.id " +
+            "LEFT JOIN restaurants r ON m.restaurants_id = r.id " +
             "WHERE c.users_id = :userId", nativeQuery = true)
     List<findUserCartMenusDto> findUserCartMenus(@Param("userId") Long userId);
 

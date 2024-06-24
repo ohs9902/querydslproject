@@ -1,5 +1,7 @@
 package com.sparta.redirect_outsourcing.domain.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sparta.redirect_outsourcing.auth.JwtProvider;
 import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
 import com.sparta.redirect_outsourcing.common.MessageResponseDto;
@@ -9,9 +11,13 @@ import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
+import com.sparta.redirect_outsourcing.domain.user.service.KakaoService;
 import com.sparta.redirect_outsourcing.domain.user.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +26,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 
 @Slf4j
 @RestController
@@ -27,6 +35,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final KakaoService kakaoService;
+
+    @Value("${kakao.client-id}")
+    private String clientId;
+
+    @Value("${kakao.redirect-uri}")
+    private String redirectUri;
 
     // 회원가입
     @PostMapping("/signup")
@@ -79,4 +94,31 @@ public class UserController {
         SecurityContextHolder.clearContext();
         return ResponseUtils.of(HttpStatus.OK, "회원 탈퇴 성공");
     }
+
+    // 카카오 로그인 요청
+    @GetMapping("/kakao/authorize")
+    public void redirectToKakaoAuthorize(HttpServletResponse response) throws IOException {
+        String requestUrl = String.format(
+                "https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code",
+                clientId, redirectUri
+        );
+        response.sendRedirect(requestUrl);
+    }
+
+    // 카카오 콜백 처리
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<MessageResponseDto> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        String token = kakaoService.kakaoLogin(code);
+        log.info("Generated token: " + token);
+        // Bearer 접두사 확인 및 추가
+        if (!token.startsWith("Bearer ")) {
+            token = "Bearer " + token;
+        }
+        log.info("Token after removing spaces: " + token);
+        response.setHeader(JwtProvider.AUTHORIZATION_HEADER, token);
+        return ResponseUtils.of(HttpStatus.OK, "카카오 로그인 성공");
+    }
+
+
+
 }

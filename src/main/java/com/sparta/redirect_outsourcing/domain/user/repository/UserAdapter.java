@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,4 +27,9 @@ public class UserAdapter {
     public User save(User user) {
         return userRepository.save(user);
     }
+
+    public Optional<User> findByKakaoId(Long kakaoId) {
+        return userRepository.findByKakaoId(kakaoId);
+    }
+
 }
