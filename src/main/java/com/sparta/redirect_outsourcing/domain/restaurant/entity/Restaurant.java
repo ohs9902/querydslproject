@@ -57,7 +57,6 @@ public class Restaurant extends TimeStampEntity {
         this.description = createReq.getDescription();
     }
 
-
     public void update(RestaurantUpdateRequestDto updateReq) {
         this.name = updateReq.getName();
         this.address = updateReq.getAddress();
