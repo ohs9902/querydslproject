@@ -32,4 +32,8 @@ public class ReviewAdapter {
     public List<Review> findAll(){
         return reviewRepository.findAll();
     }
+
+    public List<Review> findByRestaurantId(Long restaurantId){
+        return reviewRepository.findAllByRestaurantId(restaurantId);
+    }
 }

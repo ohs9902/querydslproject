@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/*").permitAll() // GET 요청의 /users/{userId} 허가
                         .requestMatchers(HttpMethod.GET, "/users/kakao/*").permitAll() // 카카오 로그인, 콜백 허용
                         .requestMatchers(HttpMethod.GET, "/restaurants/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/menus/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

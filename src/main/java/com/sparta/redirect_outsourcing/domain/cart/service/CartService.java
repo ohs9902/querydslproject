@@ -24,6 +24,7 @@ public class CartService {
     private final CartAdapter cartAdapter;
     private final CartItemAdapter cartItemAdapter;
     private final MenuAdapter menuAdapter;
+    private final UserAdapter userAdapter;
 
     @Transactional
     public CartItemResponseDto addItemToCart(User loginUser, CartItemRequestDto requestDto) {
@@ -69,7 +70,7 @@ public class CartService {
         return new CartItemResponseDto(
             cartItem.getId(),
             cartItem.getCart().getId(),
-            cartItem.getMenu().getName(),
+            cartItem.getMenu().getId(),
             cartItem.getQuantity(),
             cartItem.getQuantityPrice()
         );

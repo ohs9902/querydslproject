@@ -9,11 +9,13 @@ import lombok.Getter;
 public class ReviewResponseDto {
     private Float rating;
     private String comment;
+    private int likeCount;
 
     public static ReviewResponseDto of(Review review) {
         return ReviewResponseDto.builder()
                 .rating(review.getRating())
                 .comment(review.getComment())
+                .likeCount(review.getLikeCount())
                 .build();
     }
 }

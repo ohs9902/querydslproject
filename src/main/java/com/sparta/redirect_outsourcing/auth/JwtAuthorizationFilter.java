@@ -1,10 +1,13 @@
 package com.sparta.redirect_outsourcing.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
-import com.sparta.redirect_outsourcing.exception.custom.user.TokensException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -29,6 +33,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserAdapter userAdapter;
     private final ObjectMapper objectMapper;
+
+    private final List<String> getMethodWhiteList = List.of(
+            "/users", "/restaurants", "/restaurants", "/reviews"
+    );
+
+    private final List<String> anyMethodWhiteList = List.of(
+            "/users/signup", "/users/login"
+    );
 
     public JwtAuthorizationFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
                                   UserAdapter userAdapter, ObjectMapper objectMapper) {
@@ -43,18 +55,24 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String uri = req.getRequestURI();
+        String method = req.getMethod();
         log.info("Requested URI: {}", uri);
 
-        // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
-        String accessToken = jwtProvider.getAccessTokenFromHeader(req);
-
-        // GET 요청에 대해서는 인증을 요구하지 않음
-        if (req.getMethod().equals(HttpMethod.GET.name()) && (uri.startsWith("/users/") || uri.startsWith("/restaurants"))) {
+        // 어떤 요청이든 인증을 요구하지 않음
+        if (anyMethodWhiteList.stream().anyMatch(uri::startsWith)) {
+            System.out.println("GET요청은 통과");
             filterChain.doFilter(req, res);
-            System.out.println("GET요청에 대해서는 인증을 요구하지 않음");
+            return;
+        }
+        // GET 요청에 대해서는 인증을 요구하지 않음
+        if (HttpMethod.GET.matches(method) && getMethodWhiteList.stream().anyMatch(uri::startsWith)) {
+            System.out.println("GET요청은 통과");
+            filterChain.doFilter(req, res);
             return;
         }
 
+        // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
+        String accessToken = jwtProvider.getAccessTokenFromHeader(req);
         try {
             if (!StringUtils.hasText(accessToken)) {
                 setErrorResponse(res, ResponseCodeEnum.INVALID_TOKENS);
