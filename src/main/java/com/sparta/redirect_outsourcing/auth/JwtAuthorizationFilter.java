@@ -1,13 +1,10 @@
 package com.sparta.redirect_outsourcing.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
-import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
+import com.sparta.redirect_outsourcing.exception.custom.user.TokensException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,12 +44,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String uri = req.getRequestURI();
         log.info("Requested URI: {}", uri);
-
-        // 회원가입과 로그인 엔드포인트는 필터링하지 않음
-        if (uri.equals("/users/signup") || uri.equals("/users/login")) {
-            filterChain.doFilter(req, res);
-            return;
-        }
 
         // HTTP 요청 헤더에서 JWT 토큰 값을 가져옴. 요청헤더에서 토큰 추출
         String accessToken = jwtProvider.getAccessTokenFromHeader(req);
@@ -99,7 +90,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             setErrorResponse(res, ResponseCodeEnum.INVALID_TOKENS);
             return;
         }
-
         filterChain.doFilter(req, res);
     }
 

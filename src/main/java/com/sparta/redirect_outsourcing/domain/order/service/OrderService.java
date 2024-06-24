@@ -55,8 +55,7 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
         order.setOrderDetails(orderDetails);
         Order savedOrder = orderAdapter.save(order);
-        cartItemAdapter.deleteById(findUserCartMenus.get(0).getCartsId());
-        cartAdapter.deleteByIdAndUserId(findUserCartMenus.get(0).getCartsId(), loginUser.getId());
+        cartItemAdapter.deleteByCartId(findUserCartMenus.get(0).getCartsId());
 
         return OrderResponseDto.of(savedOrder);
     }

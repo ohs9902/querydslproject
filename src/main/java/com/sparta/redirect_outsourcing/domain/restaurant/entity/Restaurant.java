@@ -47,7 +47,13 @@ public class Restaurant extends TimeStampEntity {
 
     private String description;
 
-
+    public Restaurant(User user, String name, String address, RestaurntCategoryEnum category, String description) {
+        this.user = user;
+        this.name = name;
+        this.address = address;
+        this.category = category;
+        this.description = description;
+    }
 
     public Restaurant(RestaurantCreateRequestDto createReq, User user) {
         this.user = user;

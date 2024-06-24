@@ -11,17 +11,23 @@ import lombok.Setter;
 public class CartItemResponseDto {
     private Long id;
     private Long cartId;
-    private Long menusId;
+//    private Long menusId;
+    private String menuName;
     private Long quantity;
     private Long quantityPrice;
 
-    public CartItemResponseDto(Long id, Long cartId, Long menusId, Long quantity, Long quantityPrice) {
+    public CartItemResponseDto(Long id, Long cartId, String menuName, Long quantity, Long quantityPrice) {
+        this.id = id;
+        this.cartId = cartId;
+        this.menuName = menuName;
+        this.quantity = quantity;
+        this.quantityPrice = quantityPrice;
     }
 
     public CartItemResponseDto(CartItem cartItem) {
         this.id = cartItem.getId();
         this.cartId = cartItem.getCart().getId();
-        this.menusId = cartItem.getMenu().getId();
+        this.menuName = cartItem.getMenu().getName();
         this.quantity = cartItem.getQuantity();
         this.quantityPrice = cartItem.getQuantityPrice();
     }
