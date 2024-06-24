@@ -16,22 +16,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RestaurantService {
-
-    private final RestaurantRepository restaurantRepository;
     private final RestaurantAdapter restaurantAdapter;
 
     /************가게 등록*************/
     @Transactional
     public RestaurantResponseDto createRestaurant(RestaurantCreateRequestDto createReq, User user) {
         Restaurant restaurant = new Restaurant(createReq,user);
-        restaurantRepository.save(restaurant);
+        restaurant = restaurantAdapter.save(restaurant);
         return new RestaurantResponseDto(restaurant);
-
     }
 
     /************전체 가게 조회*************/
     public List<RestaurantResponseDto> getRestaurants() {
-        return restaurantRepository.findAll().stream().map(RestaurantResponseDto::new).toList();
+        return restaurantAdapter.findAll().stream().map(RestaurantResponseDto::new).toList();
     }
 
     /************특정 가게 조회*************/
@@ -55,7 +52,7 @@ public class RestaurantService {
     public RestaurantResponseDto deleteRestaurant(Long restaurantId,User user) {
         Restaurant restaurant = restaurantAdapter.findById(restaurantId);
         restaurant.verify(user);
-        restaurantRepository.delete(restaurant);
+        restaurantAdapter.delete(restaurant);
         return new RestaurantResponseDto(restaurant);
     }
 }
