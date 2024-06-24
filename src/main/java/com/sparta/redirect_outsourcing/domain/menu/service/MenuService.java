@@ -7,6 +7,8 @@ import com.sparta.redirect_outsourcing.domain.menu.dto.MenuResponseDto;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
 import com.sparta.redirect_outsourcing.domain.menu.entity.MenuCategoryEnum;
 import com.sparta.redirect_outsourcing.domain.menu.repository.MenuAdapter;
+import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
+import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.exception.custom.menu.MenuCategoryNotFoundException;
 import com.sparta.redirect_outsourcing.exception.custom.menu.MenuException;
@@ -27,15 +29,16 @@ import static java.rmi.server.LogStream.log;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuAdapter menuAdapter;
+    private final RestaurantAdapter restaurantAdapter;
     @Transactional
-    public MenuResponseDto createMenu(MenuRequestDto requestDto , UserDetailsImpl userDetails){
+    public MenuResponseDto createMenu(MenuRequestDto requestDto, User user){
         MenuCategoryEnum menuCategoryEnum = findCategory(requestDto.getMenuCategory());
 
         if (menuCategoryEnum == null){
             throw new MenuCategoryNotFoundException(ResponseCodeEnum.MENU_CATEGORY_NOT_FOUND);
         }
-        User user = userDetails.getUser();
-        Menu menu = new Menu(requestDto.getName(),requestDto.getPrice(),menuCategoryEnum , user);
+        Restaurant restaurant = restaurantAdapter.findById(requestDto.getRestaurantId());
+        Menu menu = new Menu(requestDto.getName(),requestDto.getPrice(),menuCategoryEnum , user , restaurant );
         Menu savedMenu = menuAdapter.save(menu);
         return MenuResponseDto.of(savedMenu);
     }
@@ -55,8 +58,7 @@ public class MenuService {
     }
 
     @Transactional
-    public void deleteMenu(Long menuId , UserDetailsImpl userDetails){
-        User user = userDetails.getUser();
+    public void deleteMenu(Long menuId , User user){
         Menu menu = menuAdapter.findById(menuId);
 
         if(menu.getUser().getId() != user.getId() ){

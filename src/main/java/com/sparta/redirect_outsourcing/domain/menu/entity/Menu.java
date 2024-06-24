@@ -29,11 +29,12 @@ public class Menu extends TimeStampEntity {
     @JoinColumn(name = "users_id")
     private User user;
 
-    public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum ,User user){
+    public Menu(String name , int price , MenuCategoryEnum menuCategoryEnum ,User user ,Restaurant restaurant){
         this.name = name;
         this.price = price;
         this.menuCategoryEnum = menuCategoryEnum;
         this.user = user;
+        this.restaurant = restaurant;
     }
 
     public void update(String name , int price , MenuCategoryEnum menuCategoryEnum){

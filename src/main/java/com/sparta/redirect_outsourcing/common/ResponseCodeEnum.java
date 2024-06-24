@@ -34,9 +34,7 @@ public enum ResponseCodeEnum {
 
     // 장바구니
     CART_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니를 찾을 수 없습니다."),
-    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니 목록을 찾을 수 없습니다.")
-    ;
-
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니 목록을 찾을 수 없습니다."),
 
     //메뉴
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND,"메뉴를 찾을 수 없습니다."),

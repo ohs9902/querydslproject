@@ -7,4 +7,5 @@ public class MenuRequestDto {
     private String name;
     private int price;
     private String menuCategory;
+    private Long restaurantId;
 }

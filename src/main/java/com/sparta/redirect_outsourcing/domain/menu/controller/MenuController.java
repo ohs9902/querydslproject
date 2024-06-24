@@ -25,8 +25,8 @@ public class MenuController {
     @PostMapping("/menus")
     public ResponseEntity<DataResponseDto<MenuResponseDto>> createMenu(
             @RequestBody MenuRequestDto requestDto ,
-            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        MenuResponseDto responseDto= menuService.createMenu(requestDto,userDetails);
+            @AuthenticationPrincipal UserDetailsImpl userDetails ){
+        MenuResponseDto responseDto= menuService.createMenu(requestDto,userDetails.getUser());
         return ResponseUtils.of(HttpStatus.OK,"메뉴 등록 성공",responseDto);
     }
 
