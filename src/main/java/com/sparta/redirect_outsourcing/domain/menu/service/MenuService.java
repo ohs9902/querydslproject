@@ -8,7 +8,9 @@ import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
 import com.sparta.redirect_outsourcing.domain.menu.entity.MenuCategoryEnum;
 import com.sparta.redirect_outsourcing.domain.menu.repository.MenuAdapter;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
+import com.sparta.redirect_outsourcing.exception.custom.menu.MenuCategoryNotFoundException;
 import com.sparta.redirect_outsourcing.exception.custom.menu.MenuException;
+import com.sparta.redirect_outsourcing.exception.custom.user.UserNotMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class MenuService {
         MenuCategoryEnum menuCategoryEnum = findCategory(requestDto.getMenuCategory());
 
         if (menuCategoryEnum == null){
-            throw new MenuException(ResponseCodeEnum.MENU_CATEGORY_NOT_FOUND);
+            throw new MenuCategoryNotFoundException(ResponseCodeEnum.MENU_CATEGORY_NOT_FOUND);
         }
         User user = userDetails.getUser();
         Menu menu = new Menu(requestDto.getName(),requestDto.getPrice(),menuCategoryEnum , user);
@@ -39,15 +41,14 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(Long menuId,MenuRequestDto requestDto ,UserDetailsImpl userDetails){
-        User user = userDetails.getUser();
+    public MenuResponseDto updateMenu(Long menuId,MenuRequestDto requestDto ,User user){
         Menu menu = menuAdapter.findById(menuId);
         if(menu.getUser().getId() != user.getId() ){
-            throw new MenuException(ResponseCodeEnum.MENU_USER_NOT_MATCH);
+            throw new UserNotMatchException(ResponseCodeEnum.MENU_USER_NOT_MATCH);
         }
         MenuCategoryEnum menuCategoryEnum = findCategory(requestDto.getMenuCategory());
         if (menuCategoryEnum == null){
-            throw new MenuException(ResponseCodeEnum.MENU_CATEGORY_NOT_FOUND);
+            throw new MenuCategoryNotFoundException(ResponseCodeEnum.MENU_CATEGORY_NOT_FOUND);
         }
         menu.update(requestDto.getName(),requestDto.getPrice(),menuCategoryEnum);
         return MenuResponseDto.of(menu);
@@ -59,7 +60,7 @@ public class MenuService {
         Menu menu = menuAdapter.findById(menuId);
 
         if(menu.getUser().getId() != user.getId() ){
-            throw new MenuException(ResponseCodeEnum.MENU_USER_NOT_MATCH);
+            throw new UserNotMatchException(ResponseCodeEnum.MENU_USER_NOT_MATCH);
         }
         menuAdapter.delete(menu);
     }

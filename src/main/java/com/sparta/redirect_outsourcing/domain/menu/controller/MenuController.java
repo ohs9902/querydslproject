@@ -36,7 +36,7 @@ public class MenuController {
             @RequestBody MenuRequestDto requestDto ,
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ){
-        MenuResponseDto responseDto = menuService.updateMenu(menuId,requestDto,userDetails);
+        MenuResponseDto responseDto = menuService.updateMenu(menuId,requestDto,userDetails.getUser());
         return ResponseUtils.of(HttpStatus.OK,"메뉴 수정 성공",responseDto);
     }
 
@@ -44,7 +44,7 @@ public class MenuController {
     public ResponseEntity<MessageResponseDto> deleteMenu(
             @PathVariable Long menuId ,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        menuService.deleteMenu(menuId,userDetails);
+        menuService.deleteMenu(menuId,userDetails.getUser());
 
         return ResponseUtils.of(HttpStatus.OK,"메뉴 삭제 성공 ");
     }
