@@ -5,10 +5,16 @@ import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "orders")
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Order extends TimeStampEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,33 +27,17 @@ public class Order extends TimeStampEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private String menuName;
-
-    @Column(nullable = false)
-    private int price;
-
-    @Column(nullable = false)
-    private int quantity;
-
-    @Column(nullable = false)
     private String restaurantName;
 
+    @Setter
     @Column(nullable = false)
-    private Long orderGroup;
+    private int totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", nullable = false)
     private User user;
 
-    @Builder
-    public Order(String address, String phoneNumber, String menuName, int price, int quantity, String restaurantName, Long orderGroup, User user) {
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.menuName = menuName;
-        this.price = price;
-        this.quantity = quantity;
-        this.restaurantName = restaurantName;
-        this.orderGroup = orderGroup;
-        this.user = user;
-    }
+    @Setter
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }
