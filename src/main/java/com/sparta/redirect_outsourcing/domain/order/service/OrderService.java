@@ -65,7 +65,6 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderResponseDto> findOrders(User loginUser, int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        sortBy = sortBy != null ? sortBy : "createdAt";
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
