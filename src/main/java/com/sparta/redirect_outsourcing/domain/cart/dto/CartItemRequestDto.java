@@ -9,10 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class CartItemRequestDto {
-//    private Long id;
-//    private Long cartId;
-//    private Long userId;
      private Long menusId;
     private Long quantity;
-//    private Long quantityPrice;
 }
