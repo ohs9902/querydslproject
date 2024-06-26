@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.restaurant.controller;
 
 import com.sparta.redirect_outsourcing.auth.UserDetailsImpl;
 import com.sparta.redirect_outsourcing.common.DataResponseDto;
+import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantUpdateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.responseDto.RestaurantResponseDto;
@@ -67,10 +68,10 @@ public class RestaurantController {
 
     /************가게 삭제*************/
     @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<DataResponseDto<RestaurantResponseDto>> deleteRestaurant(@PathVariable Long restaurantId,
-                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<MessageResponseDto> deleteRestaurant(@PathVariable Long restaurantId,
+                                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-       RestaurantResponseDto responseDto = restaurantService.deleteRestaurant(restaurantId,user);
-        return of(HttpStatus.OK, responseDto.getName() + "(이)가 삭제되었습니다.", responseDto);
+        RestaurantResponseDto responseDto = restaurantService.deleteRestaurant(restaurantId,user);
+        return of(HttpStatus.OK, responseDto.getName() + "(이)가 삭제되었습니다.");
     }
 }

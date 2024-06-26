@@ -35,15 +35,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     private final List<String> getMethodWhiteList = List.of(
-            "/users", "/restaurants", "/restaurants", "/reviews"
+            "/users", "/restaurants", "/restaurants", "/reviews", "/menus"
     );
 
     private final List<String> anyMethodWhiteList = List.of(
             "/users/signup", "/users/login"
     );
 
-    public JwtAuthorizationFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
-                                  UserAdapter userAdapter, ObjectMapper objectMapper) {
+    public JwtAuthorizationFilter(
+            JwtProvider jwtProvider,
+            UserDetailsServiceImpl userDetailsService,
+            UserAdapter userAdapter,
+            ObjectMapper objectMapper
+    ) {
         this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
         this.userAdapter = userAdapter;

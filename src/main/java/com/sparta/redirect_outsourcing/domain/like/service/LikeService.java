@@ -31,11 +31,17 @@ public class LikeService {
         like.setUser(user);
         like.setReview(review);
 
+        review.setLikeCount(review.getLikeCount() + 1);
+
         Like savedLike = likeAdapter.saveLike(like);
     }
 
     @Transactional
     public void removeLike(Long userId, Long reviewId) {
+        Review review = reviewAdapter.findById(reviewId);
+
+        review.setLikeCount(review.getLikeCount() - 1);
+
         likeAdapter.deleteLike(userId, reviewId);
     }
 
@@ -43,6 +49,4 @@ public class LikeService {
     public int countLikes(Long reviewId) {
         return likeAdapter.countLikes(reviewId);
     }
-
-
 }

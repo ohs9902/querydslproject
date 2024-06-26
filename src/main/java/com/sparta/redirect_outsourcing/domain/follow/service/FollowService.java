@@ -23,10 +23,13 @@ public class FollowService {
         Restaurant restaurant = restaurantAdapter.findById(restaurantId);
 
         Optional<Follow> findFollow = followAdapter.findByUserIdAndRestaurantId(user.getId(), restaurantId);
+        // 이미 짐한 경우(DB에 찜하기 기록이 있음)
         if (findFollow.isPresent()) {
             followAdapter.delete(findFollow.get());
             return false;
-        } else {
+        }
+        // 찜하지 않았을 경우(DB에 찜하기 기록이 없음)
+        else {
             followAdapter.save(new Follow(user, restaurant));
             return true;
         }
