@@ -11,6 +11,10 @@ import com.sparta.redirect_outsourcing.domain.review.service.ReviewService;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,8 +65,15 @@ public class ReviewController {
     }
 
     @GetMapping("/likeReviews")
-    public ResponseEntity<DataResponseDto<List<ReviewResponseDto>>> testReview(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<ReviewResponseDto> reviews = reviewService.getLikeReviews(userDetails.getUser());
+    public ResponseEntity<DataResponseDto<org.springframework.data.domain.Page<ReviewResponseDto>>> likeReviews(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction
+    ){
+        Pageable pageable = PageRequest.of(page,size, Sort.by(direction, sortBy));
+        Page<ReviewResponseDto> reviews = reviewService.getLikeReviews(userDetails.getUser(),pageable);
         return ResponseUtils.of(HttpStatus.OK,"좋아요한 리뷰 조회 성공",reviews);
     }
 

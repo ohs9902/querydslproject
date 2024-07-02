@@ -14,6 +14,8 @@ import com.sparta.redirect_outsourcing.exception.custom.review.ReviewOverRatingE
 import com.sparta.redirect_outsourcing.exception.custom.user.UserNotMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,13 +79,10 @@ public class ReviewService {
     }
     //querydsl
     @Transactional
-    public List<ReviewResponseDto> getLikeReviews(User user){
-        List<Review> reviews = queryDlsRepository.findByLikeUser(user.getId());
+    public Page<ReviewResponseDto> getLikeReviews(User user , Pageable pageable){
+        Page<Review> reviewsPage = queryDlsRepository.findByLikeUser(user.getId(),pageable);
         List<ReviewResponseDto> responseReviews = new ArrayList<>();
-        for (Review review : reviews) {
-            responseReviews.add(ReviewResponseDto.of(review));
-        }
-        return responseReviews;
+        return reviewsPage.map(review -> ReviewResponseDto.of(review));
     }
 
 }
