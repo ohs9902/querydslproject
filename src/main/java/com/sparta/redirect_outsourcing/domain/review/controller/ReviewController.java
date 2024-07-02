@@ -8,6 +8,7 @@ import com.sparta.redirect_outsourcing.common.ResponseUtils;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.redirect_outsourcing.domain.review.service.ReviewService;
+import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,6 @@ public class ReviewController {
         reviewService.deleteReview(userDetails.getUser(), reviewId);
         return ResponseUtils.of(HttpStatus.OK,"리뷰 삭제 성공");
     }
-
     @GetMapping("/restaurants/{restaurantsId}/reviews")
     public ResponseEntity<DataResponseDto<List<ReviewResponseDto>>>getReviewList(
             @PathVariable Long restaurantsId
@@ -59,6 +59,13 @@ public class ReviewController {
         List<ReviewResponseDto> reviews = reviewService.getReviews(restaurantsId);
         return ResponseUtils.of(HttpStatus.OK,"리뷰 조회 성공",reviews);
     }
+
+    @GetMapping("/likeReviews")
+    public ResponseEntity<DataResponseDto<List<ReviewResponseDto>>> testReview(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<ReviewResponseDto> reviews = reviewService.getLikeReviews(userDetails.getUser());
+        return ResponseUtils.of(HttpStatus.OK,"좋아요한 리뷰 조회 성공",reviews);
+    }
+
 
 
 }

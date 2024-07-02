@@ -1,12 +1,14 @@
 package com.sparta.redirect_outsourcing.domain.review.service;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
+import com.sparta.redirect_outsourcing.domain.like.repository.LikeAdapter;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.redirect_outsourcing.domain.review.entity.Review;
 import com.sparta.redirect_outsourcing.domain.review.repository.ReviewAdapter;
+import com.sparta.redirect_outsourcing.domain.review.repository.ReviewQueryDlsRepositoryImpl;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.exception.custom.review.ReviewOverRatingException;
 import com.sparta.redirect_outsourcing.exception.custom.user.UserNotMatchException;
@@ -26,6 +28,8 @@ public class ReviewService {
 
     private final ReviewAdapter reviewAdapter;
     private final RestaurantAdapter restaurantAdapter;
+    private final ReviewQueryDlsRepositoryImpl queryDlsRepository;
+    private final LikeAdapter likeAdapter;
 
     @Transactional
     public ReviewResponseDto createReview(User user, ReviewRequestDto requestDto, Long restaurantsId){
@@ -65,6 +69,16 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviews(Long restaurantsId){
         List<Review> reviews = reviewAdapter.findByRestaurantId(restaurantsId);
+        List<ReviewResponseDto> responseReviews = new ArrayList<>();
+        for (Review review : reviews) {
+            responseReviews.add(ReviewResponseDto.of(review));
+        }
+        return responseReviews;
+    }
+    //querydsl
+    @Transactional
+    public List<ReviewResponseDto> getLikeReviews(User user){
+        List<Review> reviews = queryDlsRepository.findByLikeUser(user.getId());
         List<ReviewResponseDto> responseReviews = new ArrayList<>();
         for (Review review : reviews) {
             responseReviews.add(ReviewResponseDto.of(review));

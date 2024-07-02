@@ -1,6 +1,7 @@
 package com.sparta.redirect_outsourcing.domain.review.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
+import com.sparta.redirect_outsourcing.domain.like.entity.Like;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
@@ -10,6 +11,9 @@ import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Table(name = "reviews")
@@ -37,6 +41,9 @@ public class Review extends TimeStampEntity {
     @JoinColumn(name = "restaurants_id")
     private Restaurant restaurant;
 
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
     public Review(Float rating, String comment, User user, Restaurant restaurant) {
         this.rating = rating;
         this.comment = comment;
@@ -48,5 +55,10 @@ public class Review extends TimeStampEntity {
     public void update(ReviewRequestDto requestDto){
         this.rating = requestDto.getRating();
         this.comment = requestDto.getComment();
+    }
+
+    public void addLike(Like like){
+        likes.add(like);
+        like.setReview(this);
     }
 }

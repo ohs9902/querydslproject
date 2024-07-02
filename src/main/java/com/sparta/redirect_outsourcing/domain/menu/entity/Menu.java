@@ -6,10 +6,12 @@ import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "menus")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Menu extends TimeStampEntity {
     @Id
