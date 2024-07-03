@@ -2,6 +2,7 @@ package com.sparta.redirect_outsourcing.domain.restaurant.entity;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
+import com.sparta.redirect_outsourcing.domain.like.entity.Like;
 import com.sparta.redirect_outsourcing.domain.menu.entity.Menu;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantUpdateRequestDto;
@@ -46,6 +47,13 @@ public class Restaurant extends TimeStampEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RestaurntCategoryEnum category;
+
+    @Setter
+    @Column(nullable = false)
+    private int likeCount;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     private String description;
 

@@ -5,9 +5,12 @@ import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.Restaura
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.responseDto.RestaurantResponseDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
+import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantQuerydslRepository;
 import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantRepository;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import java.util.List;
 @Service
 public class RestaurantService {
     private final RestaurantAdapter restaurantAdapter;
+    private final RestaurantQuerydslRepository querydslRepository;
 
     /************가게 등록*************/
     @Transactional
@@ -54,5 +58,12 @@ public class RestaurantService {
         restaurant.verify(user);
         restaurantAdapter.delete(restaurant);
         return new RestaurantResponseDto(restaurant);
+    }
+
+    /************좋아요한 가게 조회*************/
+    @Transactional
+    public Page<RestaurantResponseDto> getLikeRestaurants(User user, Pageable pageable){
+        Page<Restaurant> restaurantPage = querydslRepository.findByLikeRestaurant(user.getId(), pageable);
+        return restaurantPage.map((restaurant) -> new RestaurantResponseDto(restaurant));
     }
 }

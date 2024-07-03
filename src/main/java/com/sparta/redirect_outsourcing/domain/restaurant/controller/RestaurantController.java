@@ -11,6 +11,10 @@ import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,6 +60,23 @@ public class RestaurantController {
         return of(HttpStatus.OK,responseDto.getName()+"를(을) 조회합니다.",responseDto);
     }
 
+    @GetMapping("/likeRestaurants")
+    public ResponseEntity<DataResponseDto<Page<RestaurantResponseDto>>> likeRestaurants(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "9") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction
+    ){
+        if (userDetails == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Pageable pageable = PageRequest.of(page,size,Sort.by(direction,sortBy));
+        Page<RestaurantResponseDto> restaurants = restaurantService.getLikeRestaurants(userDetails.getUser(),pageable);
+
+        return of(HttpStatus.OK,"좋아요한 식당 조회",restaurants);
+    }
+
     /************가게 정보 변경*************/
     @PutMapping("/{restaurantId}")
     public ResponseEntity<DataResponseDto<RestaurantResponseDto>> updateRestaurant(
@@ -74,4 +95,6 @@ public class RestaurantController {
         RestaurantResponseDto responseDto = restaurantService.deleteRestaurant(restaurantId,user);
         return of(HttpStatus.OK, responseDto.getName() + "(이)가 삭제되었습니다.");
     }
+
+
 }

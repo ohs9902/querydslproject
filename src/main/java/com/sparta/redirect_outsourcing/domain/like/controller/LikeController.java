@@ -23,13 +23,25 @@ public class LikeController {
     @PostMapping("/{reviewId}/likes")
     public ResponseEntity<MessageResponseDto> addLike(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl loginUser) {
         likeService.addLike(loginUser.getUser().getId(), reviewId);
-        return ResponseUtils.of(HttpStatus.OK, "좋아요 등록 성공");
+        return ResponseUtils.of(HttpStatus.OK, "리뷰 좋아요 등록 성공");
+    }
+
+    @PostMapping("/restaurant/{restaurantId}/likes")
+    public ResponseEntity<MessageResponseDto> addLike2(@PathVariable Long restaurantId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        likeService.addLike2(userDetails.getUser().getId(), restaurantId);
+        return ResponseUtils.of(HttpStatus.OK, "식당 좋아요 등록 성공");
     }
 
     // 댓글에 좋아요 삭제
     @DeleteMapping("/{reviewId}/likes")
     public ResponseEntity<MessageResponseDto> removeLike(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl loginUser) {
         likeService.removeLike(loginUser.getUser().getId(), reviewId);
-        return ResponseUtils.of(HttpStatus.OK, "좋아요 삭제 성공");
+        return ResponseUtils.of(HttpStatus.OK, "리뷰 좋아요 삭제 성공");
+    }
+
+    @DeleteMapping("/restaurant/{restaurantId}/likes")
+    public ResponseEntity<MessageResponseDto> removeLike2(@PathVariable Long restaurantId, @AuthenticationPrincipal UserDetailsImpl loginUser) {
+        likeService.removeLike2(loginUser.getUser().getId(), restaurantId);
+        return ResponseUtils.of(HttpStatus.OK, "식당 좋아요 삭제 성공");
     }
 }

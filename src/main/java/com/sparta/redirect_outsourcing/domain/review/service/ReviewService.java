@@ -81,7 +81,6 @@ public class ReviewService {
     @Transactional
     public Page<ReviewResponseDto> getLikeReviews(User user , Pageable pageable){
         Page<Review> reviewsPage = queryDlsRepository.findByLikeUser(user.getId(),pageable);
-        List<ReviewResponseDto> responseReviews = new ArrayList<>();
         return reviewsPage.map(review -> ReviewResponseDto.of(review));
     }
 

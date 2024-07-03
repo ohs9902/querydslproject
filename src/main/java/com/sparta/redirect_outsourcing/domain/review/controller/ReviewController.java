@@ -67,10 +67,10 @@ public class ReviewController {
     @GetMapping("/likeReviews")
     public ResponseEntity<DataResponseDto<org.springframework.data.domain.Page<ReviewResponseDto>>> likeReviews(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "9") int page,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "DESC") Sort.Direction direction
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction
     ){
         Pageable pageable = PageRequest.of(page,size, Sort.by(direction, sortBy));
         Page<ReviewResponseDto> reviews = reviewService.getLikeReviews(userDetails.getUser(),pageable);
