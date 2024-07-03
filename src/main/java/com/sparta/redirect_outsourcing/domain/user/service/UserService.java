@@ -2,14 +2,14 @@ package com.sparta.redirect_outsourcing.domain.user.service;
 
 import com.sparta.redirect_outsourcing.common.ResponseCodeEnum;
 import com.sparta.redirect_outsourcing.common.S3Uploader;
-import com.sparta.redirect_outsourcing.domain.user.dto.ProfileResponseDto;
-import com.sparta.redirect_outsourcing.domain.user.dto.SignupRequestDto;
-import com.sparta.redirect_outsourcing.domain.user.dto.UpdatePasswordRequestDto;
-import com.sparta.redirect_outsourcing.domain.user.dto.UpdateProfileRequestDto;
+import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
+import com.sparta.redirect_outsourcing.domain.restaurant.repository.RestaurantAdapter;
+import com.sparta.redirect_outsourcing.domain.user.dto.*;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserRoleEnum;
 import com.sparta.redirect_outsourcing.domain.user.entity.UserStatusEnum;
 import com.sparta.redirect_outsourcing.domain.user.repository.UserAdapter;
+import com.sparta.redirect_outsourcing.domain.user.repository.UserQueryDslRepositoryImpl;
 import com.sparta.redirect_outsourcing.exception.custom.user.InvalidAdminException;
 import com.sparta.redirect_outsourcing.exception.custom.user.PasswordException;
 import com.sparta.redirect_outsourcing.exception.custom.user.ProfileImageUploadException;
@@ -31,6 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserAdapter userAdapter;
+    private final RestaurantAdapter restaurantAdapter;
+    private final UserQueryDslRepositoryImpl queryDslRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${admin-password}")
@@ -109,9 +111,11 @@ public class UserService {
     }
 
     // 프로필 조회
-    public ProfileResponseDto getProfile(Long userId) {
+    public ProfileLikeCountDto getProfile(Long userId) {
         User user = userAdapter.findById(userId);
-        return new ProfileResponseDto(user.getNickname(), user.getIntroduce(), user.getPictureUrl());
+        Long restaurantLikes = queryDslRepository.findByRestaurantLikeCount(userId);
+        Long reviewLikes = queryDslRepository.findByReviewLikeCount(userId);
+        return new ProfileLikeCountDto(user.getNickname(), user.getIntroduce(), user.getPictureUrl(),restaurantLikes,reviewLikes);
     }
 
     // 로그아웃
