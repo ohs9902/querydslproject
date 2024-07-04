@@ -66,4 +66,10 @@ public class RestaurantService {
         Page<Restaurant> restaurantPage = querydslRepository.findByLikeRestaurant(user.getId(), pageable);
         return restaurantPage.map((restaurant) -> new RestaurantResponseDto(restaurant));
     }
+
+    @Transactional
+    public Page<RestaurantResponseDto> getFollowRestaurant(User user, Pageable pageable){
+        Page<Restaurant> restaurantPage = querydslRepository.findByFollowRestaurant(user.getId(),pageable);
+        return restaurantPage.map((restaurant -> new RestaurantResponseDto(restaurant)));
+    }
 }

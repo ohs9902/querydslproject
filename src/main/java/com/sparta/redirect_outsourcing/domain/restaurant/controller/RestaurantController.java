@@ -6,6 +6,7 @@ import com.sparta.redirect_outsourcing.common.MessageResponseDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantCreateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.requestDto.RestaurantUpdateRequestDto;
 import com.sparta.redirect_outsourcing.domain.restaurant.dto.responseDto.RestaurantResponseDto;
+import com.sparta.redirect_outsourcing.domain.restaurant.entity.Restaurant;
 import com.sparta.redirect_outsourcing.domain.restaurant.service.RestaurantService;
 import com.sparta.redirect_outsourcing.domain.user.entity.User;
 import jakarta.validation.Valid;
@@ -96,5 +97,16 @@ public class RestaurantController {
         return of(HttpStatus.OK, responseDto.getName() + "(이)가 삭제되었습니다.");
     }
 
-
+    @GetMapping("/follow")
+    public ResponseEntity<DataResponseDto<Page<RestaurantResponseDto>>> getFollowRestaurant(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "9") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction
+    ){
+        Pageable pageable = PageRequest.of(page,size,Sort.by(direction,sortBy));
+        Page<RestaurantResponseDto> restaurants = restaurantService.getFollowRestaurant(userDetails.getUser(),pageable);
+        return of(HttpStatus.OK,"팔로우한 식당 조회 성공",restaurants);
+    }
 }

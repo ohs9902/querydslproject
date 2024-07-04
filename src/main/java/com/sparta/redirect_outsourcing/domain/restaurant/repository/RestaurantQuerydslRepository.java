@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface RestaurantQuerydslRepository {
+    Page<Restaurant> findByFollowRestaurant(Long userId,Pageable pageable);
     Page<Restaurant> findByLikeRestaurant(Long userId, Pageable pageable);
 }

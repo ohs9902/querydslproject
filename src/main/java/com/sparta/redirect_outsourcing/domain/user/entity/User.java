@@ -1,6 +1,7 @@
 package com.sparta.redirect_outsourcing.domain.user.entity;
 
 import com.sparta.redirect_outsourcing.common.TimeStampEntity;
+import com.sparta.redirect_outsourcing.domain.follow.entity.Follow;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -57,6 +58,9 @@ public class User extends TimeStampEntity {
     @ElementCollection
     @Column
     private List<String> previousPasswords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Follow> follows = new ArrayList<>();
 
     public User(Long kakaoId, String username, String pictureUrl, String password) {
         this.kakaoId = kakaoId;

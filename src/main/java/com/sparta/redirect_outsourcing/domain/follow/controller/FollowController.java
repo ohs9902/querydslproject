@@ -43,4 +43,5 @@ public class FollowController {
         List<FollowResponseDto> follows = followService.getFollows(user);
         return of(HttpStatus.OK, "찜목록을 조회합니다", follows);
     }
+
 }

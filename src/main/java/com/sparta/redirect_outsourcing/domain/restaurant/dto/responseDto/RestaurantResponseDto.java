@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class RestaurantResponseDto {
+    private String username;
     private String name;
 
     private String address;
@@ -19,6 +20,7 @@ public class RestaurantResponseDto {
     private LocalDateTime createdAt;
 
     public RestaurantResponseDto(Restaurant restaurant) {
+        this.username = restaurant.getUser().getUsername();
         this.name = restaurant.getName();
         this.address = restaurant.getAddress();
         this.categoryEnum = restaurant.getCategory();
