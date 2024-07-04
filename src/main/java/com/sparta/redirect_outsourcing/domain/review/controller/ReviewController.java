@@ -77,6 +77,18 @@ public class ReviewController {
         return ResponseUtils.of(HttpStatus.OK,"좋아요한 리뷰 조회 성공",reviews);
     }
 
+    @GetMapping("/restaurant/{restaurantId}/follow/reviews")
+    public ResponseEntity<DataResponseDto<Page<ReviewResponseDto>>> followRestaurantReviews(
+            @PathVariable Long restaurantId,
+            @RequestParam(defaultValue = "9") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction
+            ){
+        Pageable pageable = PageRequest.of(page,size, Sort.by(direction, sortBy));
+        Page<ReviewResponseDto> reviews = reviewService.getFollowRestaurantReviews(restaurantId,pageable);
+        return ResponseUtils.of(HttpStatus.OK,"식당 팔로우한 리뷰 조회 성공",reviews);
+    }
 
 
 }

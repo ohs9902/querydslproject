@@ -84,4 +84,10 @@ public class ReviewService {
         return reviewsPage.map(review -> ReviewResponseDto.of(review));
     }
 
+    @Transactional
+    public Page<ReviewResponseDto> getFollowRestaurantReviews(Long restaurantId,Pageable pageable){
+        Page<Review> reviewPage = queryDlsRepository.findByRestaurantFollow(restaurantId,pageable);
+        return reviewPage.map(review -> ReviewResponseDto.of(review));
+    }
+
 }
